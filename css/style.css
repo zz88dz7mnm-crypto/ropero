@@ -190,74 +190,148 @@ button {
   font-size: 0.9rem;
 }
 
-/* Swipe */
-#swipe-stack {
+/* Lienzo (armado de outfit tipo moodboard) */
+.lienzo-toolbar {
   display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
 }
 
-.swipe-card {
+.lienzo-titulo {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.icon-btn {
   background: var(--card);
+  border: 1px solid var(--borde);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-chico {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.lienzo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background:
+    linear-gradient(45deg, #eee 25%, transparent 25%),
+    linear-gradient(-45deg, #eee 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #eee 75%),
+    linear-gradient(-45deg, transparent 75%, #eee 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-color: #fafafa;
   border: 1px solid var(--borde);
   border-radius: 14px;
   overflow: hidden;
-  width: 100%;
-  max-width: 320px;
+  touch-action: none;
+  margin-bottom: 0.75rem;
 }
 
-.swipe-card img {
+.vacio-lienzo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: var(--gris);
+  font-size: 0.85rem;
+}
+
+.lienzo-item {
+  position: absolute;
+  width: 130px;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.lienzo-item.arrastrando {
+  cursor: grabbing;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.25));
+}
+
+.lienzo-item .tarjeta-prenda-lienzo {
+  background: white;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.lienzo-item img {
   width: 100%;
-  height: 320px;
+  height: 110px;
   object-fit: cover;
+  border-radius: 6px;
+  pointer-events: none;
   background: #eee;
 }
 
-.swipe-botones {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.7rem;
+.lienzo-item .btn-quitar-lienzo {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: rgba(0,0,0,0.65);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 0.75rem;
+  line-height: 1;
 }
 
-.swipe-botones button {
-  flex: 1;
-  padding: 0.6rem;
-  border-radius: 8px;
+.btn-agregar-prendas {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 10px;
   border: none;
+  background: var(--texto);
+  color: white;
   font-weight: 600;
 }
 
-.btn-descartar { background: #eee; color: #444; }
-.btn-agregar { background: var(--rojo); color: white; }
-
-#bandeja-outfit {
+/* Picker de prendas (bottom sheet) */
+.picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--card);
-  border: 1px dashed var(--borde);
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
-  min-height: 40px;
+  align-items: flex-end;
+  z-index: 50;
 }
 
-.chip-prenda {
+.picker-sheet {
+  background: var(--fondo);
+  width: 100%;
+  max-height: 75vh;
+  border-radius: 16px 16px 0 0;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.picker-header {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.75rem;
-  background: var(--fondo);
-  border: 1px solid var(--borde);
-  border-radius: 20px;
-  padding: 0.2rem 0.6rem 0.2rem 0.2rem;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
 }
 
-.chip-prenda img {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  object-fit: cover;
+.picker-grid .prenda-card {
+  cursor: pointer;
 }
 
 /* IA */
@@ -278,4 +352,73 @@ button {
   font-size: 0.85rem;
   color: var(--gris);
   margin-bottom: 0.75rem;
+}
+
+.ayuda-carrusel {
+  font-size: 0.8rem;
+  color: var(--gris);
+  margin: 0 0 0.9rem;
+}
+
+.carrusel-row {
+  margin-bottom: 1.1rem;
+}
+
+.carrusel-row h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--gris);
+}
+
+.carrusel-track {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.4rem 45% 0.6rem 0.2rem; /* padding derecho grande = último item puede centrarse */
+  scrollbar-width: none;
+}
+.carrusel-track::-webkit-scrollbar { display: none; }
+
+.carrusel-card {
+  flex: 0 0 auto;
+  width: 105px;
+  scroll-snap-align: center;
+  background: var(--card);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  transform: scale(0.88);
+  opacity: 0.6;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.carrusel-card.activa {
+  transform: scale(1);
+  opacity: 1;
+  border-color: var(--rojo);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.carrusel-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  background: #eee;
+}
+
+.carrusel-card span {
+  display: block;
+  font-size: 0.68rem;
+  padding: 0.3rem 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-guardar-generado {
+  margin-top: 0.5rem;
 }

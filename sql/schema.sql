@@ -20,6 +20,7 @@ create table if not exists outfits (
   nombre text,
   prenda_ids uuid[] not null,
   contexto jsonb,          -- ej: {"clima":"frio","ocasion":"casual"}
+  layout jsonb,            -- posición de cada prenda en el lienzo: [{prenda_id,x,y,z}]
   creado_en timestamptz not null default now()
 );
 

@@ -2,8 +2,8 @@
 
 const state = {
   prendas: [],
-  outfitEnArmado: [],
-  indiceSwipe: 0,
+  lienzo: [], // items en el lienzo: { uid, prenda, x, y, z } (x/y en % del lienzo)
+  zTope: 1,
 };
 
 const CATEGORIAS = [
@@ -43,6 +43,19 @@ function init() {
 
   document.getElementById("btn-guardar-outfit").addEventListener("click", guardarOutfitActual);
   document.getElementById("btn-sugerir").addEventListener("click", sugerirOutfitIA);
+
+  document.getElementById("btn-abrir-picker").addEventListener("click", abrirPicker);
+  document.getElementById("btn-cerrar-picker").addEventListener("click", cerrarPicker);
+  document.getElementById("picker-overlay").addEventListener("click", (ev) => {
+    if (ev.target.id === "picker-overlay") cerrarPicker();
+  });
+  document.getElementById("btn-reset-lienzo").addEventListener("click", () => {
+    if (!state.lienzo.length) return;
+    if (confirm("¿Vaciar el lienzo?")) {
+      state.lienzo = [];
+      renderLienzo();
+    }
+  });
 }
 
 function mostrarAvisoConfig() {
@@ -53,16 +66,15 @@ function mostrarAvisoConfig() {
 function cambiarTab(tab) {
   document.querySelectorAll(".tab-btn").forEach((b) => b.classList.toggle("activo", b.dataset.tab === tab));
   document.querySelectorAll(".tab-panel").forEach((p) => p.classList.toggle("oculto", p.id !== `panel-${tab}`));
-  if (tab === "outfit") {
-    state.indiceSwipe = 0;
-    renderSwipe();
-  }
+  if (tab === "outfit") renderLienzo();
+  if (tab === "ia") renderCarruseles();
 }
 
 async function cargarPrendas() {
   state.prendas = await listarPrendas();
   renderGridRopero();
-  renderSwipe();
+  renderLienzo();
+  renderCarruseles();
 }
 
 function renderGridRopero() {
@@ -135,54 +147,119 @@ function renderFormularioNuevaPrenda() {
   });
 }
 
-// --- Armado de outfit (swipe) ---
+// --- Armado de outfit (lienzo tipo moodboard, arrastrable) ---
 
-function renderSwipe() {
-  const cont = document.getElementById("swipe-stack");
-  const bandeja = document.getElementById("bandeja-outfit");
-  if (!cont) return;
+function abrirPicker() {
+  const grid = document.getElementById("picker-grid");
+  grid.innerHTML = "";
 
-  const restantes = state.prendas.filter(
-    (p) => !state.outfitEnArmado.some((o) => o.id === p.id)
-  );
-
-  if (state.indiceSwipe >= restantes.length) {
-    cont.innerHTML = `<p class="vacio">No quedan más prendas para mostrar. Agregá más desde "Mi Ropero" o guardá el outfit.</p>`;
+  if (!state.prendas.length) {
+    grid.innerHTML = `<p class="vacio">Todavía no tenés prendas cargadas. Sumá desde "Mi Ropero".</p>`;
   } else {
-    const prenda = restantes[state.indiceSwipe];
-    cont.innerHTML = `
-      <div class="swipe-card">
-        <img src="${prenda.imagen_url}" alt="${prenda.nombre}" />
+    for (const prenda of state.prendas) {
+      const card = document.createElement("div");
+      card.className = "prenda-card";
+      card.innerHTML = `
+        <img src="${prenda.imagen_url}" alt="${prenda.nombre}" loading="lazy" />
         <div class="prenda-info">
           <strong>${prenda.nombre}</strong>
           <span class="badge">${etiquetaCategoria(prenda.categoria)}</span>
         </div>
-        <div class="swipe-botones">
-          <button id="btn-descartar" class="btn-descartar">✕ Descartar</button>
-          <button id="btn-agregar" class="btn-agregar">✓ Agregar al outfit</button>
-        </div>
-      </div>
-    `;
-    document.getElementById("btn-descartar").addEventListener("click", () => {
-      state.indiceSwipe++;
-      renderSwipe();
-    });
-    document.getElementById("btn-agregar").addEventListener("click", () => {
-      state.outfitEnArmado.push(prenda);
-      renderSwipe();
-    });
+      `;
+      card.addEventListener("click", () => agregarAlLienzo(prenda));
+      grid.appendChild(card);
+    }
   }
 
-  bandeja.innerHTML = state.outfitEnArmado
-    .map(
-      (p) => `<div class="chip-prenda"><img src="${p.imagen_url}" alt="${p.nombre}" />${p.nombre}</div>`
-    )
-    .join("") || `<span class="vacio-chico">Sin prendas seleccionadas todavía.</span>`;
+  document.getElementById("picker-overlay").classList.remove("oculto");
+}
+
+function cerrarPicker() {
+  document.getElementById("picker-overlay").classList.add("oculto");
+}
+
+function agregarAlLienzo(prenda) {
+  const cantidad = state.lienzo.length;
+  state.lienzo.push({
+    uid: crypto.randomUUID(),
+    prenda,
+    x: 15 + (cantidad % 3) * 12, // % desde la izquierda, escalonado
+    y: 10 + (cantidad % 4) * 14, // % desde arriba, escalonado
+    z: ++state.zTope,
+  });
+  renderLienzo();
+}
+
+function renderLienzo() {
+  const cont = document.getElementById("lienzo");
+  if (!cont) return;
+
+  cont.querySelectorAll(".lienzo-item").forEach((el) => el.remove());
+
+  const vacio = document.getElementById("lienzo-vacio");
+  vacio.classList.toggle("oculto", state.lienzo.length > 0);
+
+  for (const item of state.lienzo) {
+    const el = document.createElement("div");
+    el.className = "lienzo-item";
+    el.style.left = item.x + "%";
+    el.style.top = item.y + "%";
+    el.style.zIndex = item.z;
+    el.innerHTML = `
+      <div class="tarjeta-prenda-lienzo">
+        <img src="${item.prenda.imagen_url}" alt="${item.prenda.nombre}" />
+      </div>
+      <button class="btn-quitar-lienzo">✕</button>
+    `;
+
+    el.querySelector(".btn-quitar-lienzo").addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      state.lienzo = state.lienzo.filter((i) => i.uid !== item.uid);
+      renderLienzo();
+    });
+
+    habilitarArrastre(el, item, cont);
+    cont.appendChild(el);
+  }
+}
+
+function habilitarArrastre(el, item, canvas) {
+  el.addEventListener("pointerdown", (ev) => {
+    ev.preventDefault();
+    el.setPointerCapture(ev.pointerId);
+    el.classList.add("arrastrando");
+    item.z = ++state.zTope;
+    el.style.zIndex = item.z;
+
+    const rectCanvas = canvas.getBoundingClientRect();
+
+    const mover = (moveEv) => {
+      let x = ((moveEv.clientX - rectCanvas.left) / rectCanvas.width) * 100;
+      let y = ((moveEv.clientY - rectCanvas.top) / rectCanvas.height) * 100;
+      x = Math.max(0, Math.min(88, x));
+      y = Math.max(0, Math.min(85, y));
+      item.x = x;
+      item.y = y;
+      el.style.left = x + "%";
+      el.style.top = y + "%";
+    };
+
+    const soltar = () => {
+      el.classList.remove("arrastrando");
+      el.removeEventListener("pointermove", mover);
+      el.removeEventListener("pointerup", soltar);
+      el.removeEventListener("pointercancel", soltar);
+    };
+
+    el.addEventListener("pointermove", mover);
+    el.addEventListener("pointerup", soltar);
+    el.addEventListener("pointercancel", soltar);
+  });
 }
 
 async function guardarOutfitActual() {
-  if (!state.outfitEnArmado.length) {
-    alert("Sumá al menos una prenda antes de guardar el outfit.");
+  if (!state.lienzo.length) {
+    alert("Sumá al menos una prenda al lienzo antes de guardar el outfit.");
     return;
   }
   const nombre = prompt("Nombre para este outfit:", "Outfit " + new Date().toLocaleDateString());
@@ -191,24 +268,77 @@ async function guardarOutfitActual() {
   try {
     await guardarOutfit({
       nombre,
-      prenda_ids: state.outfitEnArmado.map((p) => p.id),
+      prenda_ids: state.lienzo.map((i) => i.prenda.id),
       contexto: {},
+      layout: state.lienzo.map((i) => ({ prenda_id: i.prenda.id, x: i.x, y: i.y, z: i.z })),
     });
     alert("Outfit guardado ✅");
-    state.outfitEnArmado = [];
-    state.indiceSwipe = 0;
-    renderSwipe();
   } catch (e) {
     alert("Error guardando el outfit: " + e.message);
   }
 }
 
-// --- Sugerencia con IA (reglas + clima) ---
+// --- Carruseles por categoría + Generar (reglas + clima) ---
+
+let state_ultimoGenerado = [];
+
+function renderCarruseles() {
+  const cont = document.getElementById("carruseles-categorias");
+  if (!cont) return;
+  cont.innerHTML = "";
+
+  for (const cat of CATEGORIAS) {
+    const items = state.prendas.filter((p) => p.categoria === cat.value);
+    if (!items.length) continue;
+
+    const row = document.createElement("div");
+    row.className = "carrusel-row";
+    row.innerHTML = `
+      <h4>${cat.label}</h4>
+      <div class="carrusel-track" data-categoria="${cat.value}">
+        ${items
+          .map(
+            (p) => `
+          <div class="carrusel-card" data-id="${p.id}">
+            <img src="${p.imagen_url}" alt="${p.nombre}" loading="lazy" />
+            <span>${p.nombre}</span>
+          </div>`
+          )
+          .join("")}
+      </div>
+    `;
+    cont.appendChild(row);
+
+    const track = row.querySelector(".carrusel-track");
+    marcarCardCentrada(track);
+    track.addEventListener("scroll", () => marcarCardCentrada(track), { passive: true });
+  }
+
+  if (!cont.children.length) {
+    cont.innerHTML = `<p class="vacio">Cargá prendas en "Mi Ropero" para poder generar combinaciones.</p>`;
+  }
+}
+
+function marcarCardCentrada(track) {
+  const centroTrack = track.getBoundingClientRect().left + track.clientWidth / 2;
+  let masCercana = null;
+  let distMin = Infinity;
+  track.querySelectorAll(".carrusel-card").forEach((card) => {
+    const centroCard = card.getBoundingClientRect().left + card.offsetWidth / 2;
+    const dist = Math.abs(centroCard - centroTrack);
+    card.classList.remove("activa");
+    if (dist < distMin) {
+      distMin = dist;
+      masCercana = card;
+    }
+  });
+  if (masCercana) masCercana.classList.add("activa");
+}
 
 async function sugerirOutfitIA() {
-  const cont = document.getElementById("resultado-ia");
+  const resultado = document.getElementById("resultado-ia");
   const ocasion = document.getElementById("input-ocasion").value;
-  cont.innerHTML = `<p class="vacio">Consultando el clima y armando la sugerencia...</p>`;
+  resultado.innerHTML = `<p class="vacio">Consultando el clima y armando la combinación...</p>`;
 
   const clima = await obtenerClimaActual();
   const { prendas, motivo } = recomendarOutfit(state.prendas, {
@@ -218,25 +348,43 @@ async function sugerirOutfitIA() {
   });
 
   if (!prendas.length) {
-    cont.innerHTML = `<p class="vacio">No encontré suficientes prendas cargadas para armar una combinación. Sumá más desde "Mi Ropero".</p>`;
+    resultado.innerHTML = `<p class="vacio">No encontré suficientes prendas para armar una combinación. Sumá más desde "Mi Ropero".</p>`;
     return;
   }
 
-  cont.innerHTML = `
-    <p class="motivo-ia">${motivo}${clima.temperatura !== null ? ` (${Math.round(clima.temperatura)}°C)` : ""}</p>
-    <div class="grid-sugerencia">
-      ${prendas
-        .map(
-          (p) => `
-        <div class="prenda-card">
-          <img src="${p.imagen_url}" alt="${p.nombre}" />
-          <div class="prenda-info">
-            <strong>${p.nombre}</strong>
-            <span class="badge">${etiquetaCategoria(p.categoria)}</span>
-          </div>
-        </div>`
-        )
-        .join("")}
-    </div>
-  `;
+  // Desliza cada carrusel hasta la prenda elegida, una fila después de otra.
+  prendas.forEach((prenda, i) => {
+    setTimeout(() => {
+      const track = document.querySelector(`.carrusel-track[data-categoria="${prenda.categoria}"]`);
+      const card = track?.querySelector(`.carrusel-card[data-id="${prenda.id}"]`);
+      card?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }, i * 350);
+  });
+
+  state_ultimoGenerado = prendas;
+
+  const demora = prendas.length * 350 + 300;
+  setTimeout(() => {
+    resultado.innerHTML = `
+      <p class="motivo-ia">${motivo}${clima.temperatura !== null ? ` (${Math.round(clima.temperatura)}°C)` : ""}</p>
+      <button id="btn-guardar-generado" class="btn-primario btn-guardar-generado">Guardar este outfit</button>
+    `;
+    document.getElementById("btn-guardar-generado").addEventListener("click", guardarOutfitGenerado);
+  }, demora);
+}
+
+async function guardarOutfitGenerado() {
+  if (!state_ultimoGenerado.length) return;
+  const nombre = prompt("Nombre para este outfit:", "Outfit " + new Date().toLocaleDateString());
+  if (nombre === null) return;
+  try {
+    await guardarOutfit({
+      nombre,
+      prenda_ids: state_ultimoGenerado.map((p) => p.id),
+      contexto: {},
+    });
+    alert("Outfit guardado ✅");
+  } catch (e) {
+    alert("Error guardando el outfit: " + e.message);
+  }
 }

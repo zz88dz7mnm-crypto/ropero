@@ -45,13 +45,28 @@
   </section>
 
   <section id="panel-outfit" class="tab-panel oculto">
-    <div id="swipe-stack"></div>
-    <h3>Outfit en armado</h3>
-    <div id="bandeja-outfit"></div>
-    <div class="form-actions">
-      <button id="btn-guardar-outfit" class="btn-primario">Guardar outfit</button>
+    <div class="lienzo-toolbar">
+      <button id="btn-reset-lienzo" class="icon-btn" title="Vaciar lienzo">↺</button>
+      <span class="lienzo-titulo">Outfit</span>
+      <button id="btn-guardar-outfit" class="btn-primario btn-chico">Guardar</button>
     </div>
+
+    <div id="lienzo" class="lienzo">
+      <p id="lienzo-vacio" class="vacio-lienzo">Tocá "Agregar prendas" para empezar a armar el outfit.</p>
+    </div>
+
+    <button id="btn-abrir-picker" class="btn-agregar-prendas">+ Agregar prendas</button>
   </section>
+
+  <div id="picker-overlay" class="picker-overlay oculto">
+    <div class="picker-sheet">
+      <div class="picker-header">
+        <strong>Elegí prendas</strong>
+        <button id="btn-cerrar-picker" class="icon-btn">✕</button>
+      </div>
+      <div id="picker-grid" class="grid-ropero"></div>
+    </div>
+  </div>
 
   <section id="panel-ia" class="tab-panel oculto">
     <div class="panel-ia-controles">
@@ -60,8 +75,12 @@
         <option value="formal">Formal</option>
         <option value="deportivo">Deportivo</option>
       </select>
-      <button id="btn-sugerir" class="btn-primario">Sugerir outfit según el clima</button>
+      <button id="btn-sugerir" class="btn-primario">Generar</button>
     </div>
+
+    <p class="ayuda-carrusel">Deslizá cada fila para ver todas tus prendas de esa categoría. Tocá "Generar" y la IA va a deslizar cada fila hasta la combinación elegida.</p>
+
+    <div id="carruseles-categorias"></div>
     <div id="resultado-ia"></div>
   </section>
 </main>
