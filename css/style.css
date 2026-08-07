@@ -18,9 +18,10 @@ body {
 
 /* Cuatro filas (gorra / remera / pantalón / zapatilla), cada una su propia
    "zona" para el drag/trackpad sin pisarse. Las imágenes se usan tal cual
-   (sin recortar ni editar) — lo único que se ajusta acá es el tamaño de
-   visualización, para que guarden una proporción parecida a un cuerpo real,
-   con un espacio chico y parejo entre cada prenda. */
+   (sin recortar ni editar) — lo único que se ajusta es el tamaño de
+   visualización (acá y en ALTURA_VH de app.js), para que guarden una
+   proporción parecida a un cuerpo real con un espacio bien chico entre cada
+   prenda. */
 .fila {
   position: absolute;
   left: 0;
@@ -29,22 +30,22 @@ body {
 
 #fila-gorras {
   top: 0;
-  height: 18.95vh; /* gorra: centro absoluto 14.45vh, altura 8.4vh */
+  height: 17.2vh; /* gorra: centro absoluto 10.55vh, altura de referencia 13vh */
 }
 
 #fila-remeras {
-  top: 18.95vh;
-  height: 22.5vh; /* remera: centro absoluto 30.25vh, altura 22vh */
+  top: 17.2vh;
+  height: 22.3vh; /* remera: centro absoluto 28.35vh, altura 22vh */
 }
 
 #fila-pantalones {
-  top: 41.45vh;
-  height: 34.5vh; /* pantalón: centro absoluto 58.65vh, altura 34vh */
+  top: 39.5vh;
+  height: 34.3vh; /* pantalón: centro absoluto 56.65vh, altura 34vh */
 }
 
 #fila-zapatillas {
-  top: 75.95vh;
-  height: 24.05vh; /* zapatilla: centro absoluto 83vh, altura 13.5vh */
+  top: 73.8vh;
+  height: 26.2vh; /* zapatilla: centro absoluto 84.95vh, altura de referencia 22vh */
 }
 
 .stage {
@@ -68,19 +69,19 @@ body {
 }
 
 #fila-gorras .card {
-  top: 14.45vh;
+  top: 10.55vh;
 }
 
 #fila-remeras .card {
-  top: 11.3vh; /* absoluto 30.25vh - los 18.95vh donde arranca la fila */
+  top: 11.15vh; /* absoluto 28.35vh - los 17.2vh donde arranca la fila */
 }
 
 #fila-pantalones .card {
-  top: 17.2vh; /* absoluto 58.65vh - los 41.45vh donde arranca la fila */
+  top: 17.15vh; /* absoluto 56.65vh - los 39.5vh donde arranca la fila */
 }
 
 #fila-zapatillas .card {
-  top: 7.05vh; /* absoluto 83vh - los 75.95vh donde arranca la fila */
+  top: 11.15vh; /* absoluto 84.95vh - los 73.8vh donde arranca la fila */
 }
 
 .card.en-movimiento {
@@ -92,8 +93,9 @@ body {
 }
 
 /* Las imágenes van tal cual (sin recortar/editar); el ancho lo define cada
-   PNG. Cada tipo de prenda tiene su altura de referencia para que la
-   proporción entre todas se parezca a la de un cuerpo real. */
+   PNG. Estas alturas son un default por si algún día se suma una prenda sin
+   entrada en ALTURA_VH (app.js) — las 9 fotos actuales tienen su propio
+   valor puesto por JS para que el tamaño real quede parejo entre sí. */
 .card img {
   display: block;
   width: auto;
@@ -103,7 +105,7 @@ body {
 }
 
 #fila-gorras .card img {
-  height: 8.4vh;
+  height: 8vh;
 }
 
 #fila-remeras .card img {
@@ -115,7 +117,7 @@ body {
 }
 
 #fila-zapatillas .card img {
-  height: 13.5vh;
+  height: 14vh;
 }
 
 /* Slot vacío de gorra ("sin gorro"): no renderiza imagen, ocupa lugar igual
@@ -126,34 +128,34 @@ body {
 
 @media (max-width: 600px) {
   #fila-gorras {
-    height: 24.55vh;
+    height: 23vh;
   }
   #fila-remeras {
-    top: 24.55vh;
-    height: 18.43vh;
+    top: 23vh;
+    height: 18.25vh;
   }
   #fila-pantalones {
-    top: 42.98vh;
-    height: 28.42vh;
+    top: 41.25vh;
+    height: 28.25vh;
   }
   #fila-zapatillas {
-    top: 71.4vh;
-    height: 28.6vh;
+    top: 69.5vh;
+    height: 30.5vh;
   }
   #fila-gorras .card {
-    top: 20.7vh;
+    top: 17.475vh;
   }
   #fila-remeras .card {
-    top: 9.25vh; /* absoluto 33.8vh - 24.55vh */
+    top: 9.125vh; /* absoluto 32.125vh - 23vh */
   }
   #fila-pantalones .card {
-    top: 14.17vh; /* absoluto 57.15vh - 42.98vh */
+    top: 14.125vh; /* absoluto 55.375vh - 41.25vh */
   }
   #fila-zapatillas .card {
-    top: 5.88vh; /* absoluto 77.28vh - 71.4vh */
+    top: 9.275vh; /* absoluto 78.775vh - 69.5vh */
   }
   #fila-gorras .card img {
-    height: 7.2vh;
+    height: 6.5vh;
   }
   #fila-remeras .card img {
     height: 18vh;
@@ -162,7 +164,7 @@ body {
     height: 28vh;
   }
   #fila-zapatillas .card img {
-    height: 11.25vh;
+    height: 11vh;
   }
 }
 

@@ -7,6 +7,30 @@
 const ESPACIADO = 165; // px entre el centro de una prenda y la siguiente
 const SENSIBILIDAD_RUEDA = 1; // qué tan rápido responde el trackpad
 
+// No editamos ninguna imagen (van tal cual las carga cada prenda), pero cada
+// foto trae distinto margen/encuadre alrededor del objeto, así que a igual
+// "height" de CSS se ven de tamaño distinto. Estos valores fijan la altura
+// de cada imagen puntual para que el ANCHO real (lo que se lee como tamaño)
+// quede parejo entre gorras y entre zapatillas. Es solo tamaño de
+// visualización, no toca el archivo.
+const ALTURA_VH_DESKTOP = {
+  "img/gorras/padres-marron.png": 13.1,
+  "img/gorras/negra-lisa.png": 6.8,
+  "img/gorras/yankees-roja.png": 6.9,
+  "img/zapatillas/vans-skhi-negra.png": 13.5,
+  "img/zapatillas/timberland-miel.png": 11.2,
+  "img/zapatillas/vans-halfcab-negra.png": 21.7,
+};
+
+const ALTURA_VH_MOBILE = {
+  "img/gorras/padres-marron.png": 10.9,
+  "img/gorras/negra-lisa.png": 5.6,
+  "img/gorras/yankees-roja.png": 5.7,
+  "img/zapatillas/vans-skhi-negra.png": 11.2,
+  "img/zapatillas/timberland-miel.png": 9.3,
+  "img/zapatillas/vans-halfcab-negra.png": 18.0,
+};
+
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -69,6 +93,9 @@ function crearCoverflow(trackEl, items) {
       card.dataset.index = i;
       if (!esVacio) {
         card.innerHTML = `<img src="${item.imagen_url}" alt="${item.nombre || ""}" draggable="false" />`;
+        const tabla = window.matchMedia("(max-width: 600px)").matches ? ALTURA_VH_MOBILE : ALTURA_VH_DESKTOP;
+        const alto = tabla[item.imagen_url];
+        if (alto) card.querySelector("img").style.height = alto + "vh";
       }
       card.addEventListener("click", () => {
         if (estado.arrastrando) return;
