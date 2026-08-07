@@ -12,14 +12,47 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+body {
+  position: relative;
+}
+
+/* Cuatro filas (gorra / remera / pantalón / zapatilla), cada una su propia
+   "zona" para el drag/trackpad sin pisarse. Las imágenes se usan tal cual
+   (sin recortar ni editar) — lo único que se ajusta acá es el tamaño de
+   visualización, para que guarden una proporción parecida a un cuerpo real,
+   con un espacio chico y parejo entre cada prenda. */
+.fila {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+#fila-gorras {
+  top: 0;
+  height: 19.5vh; /* gorra: centro absoluto 15.25vh, altura 7vh */
+}
+
+#fila-remeras {
+  top: 19.5vh;
+  height: 23.5vh; /* remera: centro absoluto 31.25vh, altura 22vh */
+}
+
+#fila-pantalones {
+  top: 43vh;
+  height: 35.5vh; /* pantalón: centro absoluto 60.75vh, altura 34vh */
+}
+
+#fila-zapatillas {
+  top: 78.5vh;
+  height: 21.5vh; /* zapatilla: centro absoluto 83.75vh, altura 9vh */
+}
+
 .stage {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   perspective: 1400px;
   touch-action: pan-y;
-  background:
-    radial-gradient(ellipse at 50% 35%, #1a1a1a 0%, #000 70%);
 }
 
 .track {
@@ -30,9 +63,24 @@ html, body {
 
 .card {
   position: absolute;
-  top: 50%;
   left: 50%;
   will-change: transform, opacity, filter;
+}
+
+#fila-gorras .card {
+  top: 15.25vh;
+}
+
+#fila-remeras .card {
+  top: 11.75vh; /* absoluto 31.25vh - los 19.5vh donde arranca la fila */
+}
+
+#fila-pantalones .card {
+  top: 17.75vh; /* absoluto 60.75vh - los 43vh donde arranca la fila */
+}
+
+#fila-zapatillas .card {
+  top: 5.25vh; /* absoluto 83.75vh - los 78.5vh donde arranca la fila */
 }
 
 .card.en-movimiento {
@@ -43,43 +91,89 @@ html, body {
   transition: transform 0.5s cubic-bezier(0.22, 0.9, 0.24, 1), opacity 0.5s ease, filter 0.5s ease;
 }
 
-/* Todas las remeras a la misma altura; el ancho lo define cada PNG (no se deforma ni recorta). */
+/* Las imágenes van tal cual (sin recortar/editar); el ancho lo define cada
+   PNG. Cada tipo de prenda tiene su altura de referencia para que la
+   proporción entre todas se parezca a la de un cuerpo real. */
 .card img {
   display: block;
-  height: 380px;
   width: auto;
   max-width: none;
   pointer-events: none;
   -webkit-user-drag: none;
 }
 
+#fila-gorras .card img {
+  height: 7vh;
+}
+
+#fila-remeras .card img {
+  height: 22vh;
+}
+
+#fila-pantalones .card img {
+  height: 34vh;
+}
+
+#fila-zapatillas .card img {
+  height: 9vh;
+}
+
+/* Slot vacío de gorra ("sin gorro"): no renderiza imagen, ocupa lugar igual
+   para poder deslizar hasta él. */
+.card.vacio-gorra {
+  width: 1px;
+}
+
 @media (max-width: 600px) {
-  .card img {
-    height: 300px;
+  #fila-gorras {
+    height: 25.05vh;
+  }
+  #fila-remeras {
+    top: 25.05vh;
+    height: 19.2vh;
+  }
+  #fila-pantalones {
+    top: 44.25vh;
+    height: 29.2vh;
+  }
+  #fila-zapatillas {
+    top: 73.45vh;
+    height: 26.55vh;
+  }
+  #fila-gorras .card {
+    top: 21.45vh;
+  }
+  #fila-remeras .card {
+    top: 9.6vh; /* absoluto 34.65vh - 25.05vh */
+  }
+  #fila-pantalones .card {
+    top: 14.6vh; /* absoluto 58.85vh - 44.25vh */
+  }
+  #fila-zapatillas .card {
+    top: 4.35vh; /* absoluto 77.8vh - 73.45vh */
+  }
+  #fila-gorras .card img {
+    height: 6vh;
+  }
+  #fila-remeras .card img {
+    height: 18vh;
+  }
+  #fila-pantalones .card img {
+    height: 28vh;
+  }
+  #fila-zapatillas .card img {
+    height: 7.5vh;
   }
 }
 
-.contador {
-  position: fixed;
-  bottom: 22px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.vacio-remeras {
-  position: fixed;
+.vacio-fila {
+  position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
   text-align: center;
   padding: 2rem;
 }
