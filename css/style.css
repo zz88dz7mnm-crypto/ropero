@@ -1,424 +1,87 @@
 :root {
-  --rojo: #e11d2e;
-  --fondo: #fafafa;
-  --texto: #1c1c1c;
-  --gris: #6b6b6b;
-  --borde: #e5e5e5;
-  --card: #ffffff;
+  --negro: #000;
+  --card-bg: #111;
 }
 
 * { box-sizing: border-box; }
 
-body {
+html, body {
   margin: 0;
+  height: 100%;
+  background: var(--negro);
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--fondo);
-  color: var(--texto);
 }
 
-header.app-header {
-  background: var(--rojo);
-  color: white;
-  padding: 1rem 1rem 0;
-}
-
-header.app-header h1 {
-  margin: 0 0 0.75rem;
-  font-size: 1.4rem;
-}
-
-.tabs {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.tab-btn {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: white;
-  padding: 0.7rem 0.5rem;
-  font-size: 0.85rem;
-  border-radius: 8px 8px 0 0;
-  cursor: pointer;
-}
-
-.tab-btn.activo {
-  background: var(--fondo);
-  color: var(--texto);
-  font-weight: 600;
-}
-
-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.oculto { display: none !important; }
-
-.aviso {
-  background: #fff4e5;
-  border: 1px solid #f5c98a;
-  padding: 0.9rem 1rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
-.aviso code {
-  background: #00000010;
-  padding: 0 4px;
-  border-radius: 4px;
-}
-
-form#form-prenda {
-  background: var(--card);
-  border: 1px solid var(--borde);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1.25rem;
-  display: grid;
-  gap: 0.6rem;
-}
-
-form#form-prenda input[type="text"],
-form#form-prenda input[type="url"],
-form#form-prenda select {
-  width: 100%;
-  padding: 0.55rem 0.6rem;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  font-size: 0.95rem;
-}
-
-.fila-checks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.chk {
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-button {
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.btn-primario {
-  background: var(--rojo);
-  color: white;
-  border: none;
-  padding: 0.6rem 1.1rem;
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.grid-ropero, .grid-sugerencia {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.75rem;
-}
-
-.prenda-card {
-  background: var(--card);
-  border: 1px solid var(--borde);
-  border-radius: 10px;
-  overflow: hidden;
+.stage {
   position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.prenda-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  background: #eee;
-}
-
-.prenda-info {
-  padding: 0.5rem 0.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.prenda-info strong {
-  font-size: 0.85rem;
-}
-
-.badge {
-  align-self: flex-start;
-  background: #f0e2e2;
-  color: var(--rojo);
-  font-size: 0.7rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: 6px;
-}
-
-.tags {
-  font-size: 0.7rem;
-  color: var(--gris);
-}
-
-.btn-borrar {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background: rgba(0,0,0,0.55);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  font-size: 0.8rem;
-  line-height: 1;
-}
-
-.vacio, .vacio-chico {
-  color: var(--gris);
-  font-size: 0.9rem;
-}
-
-/* Lienzo (armado de outfit tipo moodboard) */
-.lienzo-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.6rem;
-}
-
-.lienzo-titulo {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.icon-btn {
-  background: var(--card);
-  border: 1px solid var(--borde);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-chico {
-  padding: 0.45rem 0.9rem;
-  font-size: 0.85rem;
-}
-
-.lienzo {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1400px;
+  touch-action: pan-y;
   background:
-    linear-gradient(45deg, #eee 25%, transparent 25%),
-    linear-gradient(-45deg, #eee 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #eee 75%),
-    linear-gradient(-45deg, transparent 75%, #eee 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  background-color: #fafafa;
-  border: 1px solid var(--borde);
-  border-radius: 14px;
-  overflow: hidden;
-  touch-action: none;
-  margin-bottom: 0.75rem;
+    radial-gradient(ellipse at 50% 35%, #1a1a1a 0%, #000 70%);
 }
 
-.vacio-lienzo {
+.track {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  color: var(--gris);
-  font-size: 0.85rem;
+  transform-style: preserve-3d;
 }
 
-.lienzo-item {
+.card {
   position: absolute;
-  width: 130px;
-  touch-action: none;
-  cursor: grab;
-  user-select: none;
+  top: 50%;
+  left: 50%;
+  width: 250px;
+  height: 340px;
+  margin: -170px 0 0 -125px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  will-change: transform, opacity, filter;
+  -webkit-box-reflect: below 6px linear-gradient(transparent, transparent 55%, rgba(255, 255, 255, 0.12));
 }
 
-.lienzo-item.arrastrando {
-  cursor: grabbing;
-  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.25));
+.card.en-movimiento {
+  transition: none;
 }
 
-.lienzo-item .tarjeta-prenda-lienzo {
-  background: white;
-  border-radius: 10px;
-  padding: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+.card:not(.en-movimiento) {
+  transition: transform 0.5s cubic-bezier(0.22, 0.9, 0.24, 1), opacity 0.5s ease, filter 0.5s ease;
 }
 
-.lienzo-item img {
+.card img {
   width: 100%;
-  height: 110px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 6px;
+  display: block;
   pointer-events: none;
-  background: #eee;
+  -webkit-user-drag: none;
 }
 
-.lienzo-item .btn-quitar-lienzo {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: rgba(0,0,0,0.65);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
+.contador {
+  position: fixed;
+  bottom: 22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.45);
   font-size: 0.75rem;
-  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
-.btn-agregar-prendas {
-  width: 100%;
-  padding: 0.75rem;
-  border-radius: 10px;
-  border: none;
-  background: var(--texto);
-  color: white;
-  font-weight: 600;
-}
-
-/* Picker de prendas (bottom sheet) */
-.picker-overlay {
+.vacio-remeras {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: flex-end;
-  z-index: 50;
-}
-
-.picker-sheet {
-  background: var(--fondo);
-  width: 100%;
-  max-height: 75vh;
-  border-radius: 16px 16px 0 0;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
-.picker-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
-
-.picker-grid .prenda-card {
-  cursor: pointer;
-}
-
-/* IA */
-.panel-ia-controles {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.panel-ia-controles select {
-  flex: 1;
-  padding: 0.55rem;
-  border-radius: 8px;
-  border: 1px solid var(--borde);
-}
-
-.motivo-ia {
-  font-size: 0.85rem;
-  color: var(--gris);
-  margin-bottom: 0.75rem;
-}
-
-.ayuda-carrusel {
-  font-size: 0.8rem;
-  color: var(--gris);
-  margin: 0 0 0.9rem;
-}
-
-.carrusel-row {
-  margin-bottom: 1.1rem;
-}
-
-.carrusel-row h4 {
-  margin: 0 0 0.4rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--gris);
-}
-
-.carrusel-track {
-  display: flex;
-  gap: 0.6rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 0.4rem 45% 0.6rem 0.2rem; /* padding derecho grande = último item puede centrarse */
-  scrollbar-width: none;
-}
-.carrusel-track::-webkit-scrollbar { display: none; }
-
-.carrusel-card {
-  flex: 0 0 auto;
-  width: 105px;
-  scroll-snap-align: center;
-  background: var(--card);
-  border: 1px solid var(--borde);
-  border-radius: 10px;
-  overflow: hidden;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
   text-align: center;
-  transform: scale(0.88);
-  opacity: 0.6;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.carrusel-card.activa {
-  transform: scale(1);
-  opacity: 1;
-  border-color: var(--rojo);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-}
-
-.carrusel-card img {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-  background: #eee;
-}
-
-.carrusel-card span {
-  display: block;
-  font-size: 0.68rem;
-  padding: 0.3rem 0.2rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.btn-guardar-generado {
-  margin-top: 0.5rem;
+  padding: 2rem;
 }

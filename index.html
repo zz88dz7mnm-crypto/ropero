@@ -3,93 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ropero</title>
+<title>Remeras</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header class="app-header">
-  <h1>👕 Ropero</h1>
-  <nav class="tabs">
-    <button class="tab-btn activo" data-tab="ropero">Mi Ropero</button>
-    <button class="tab-btn" data-tab="outfit">Armar Outfit</button>
-    <button class="tab-btn" data-tab="ia">Sugerencia IA</button>
-  </nav>
-</header>
+<div class="stage" id="stage">
+  <div class="track" id="track"></div>
+</div>
 
-<main>
-  <div id="aviso-config" class="aviso oculto">
-    ⚠️ Todavía no conectaste la base de datos. Editá <code>js/config.js</code> con la URL y la
-    anon key de tu proyecto de Supabase (Project Settings → API), y corré <code>sql/schema.sql</code>
-    en el SQL Editor de Supabase.
-  </div>
-
-  <section id="panel-ropero" class="tab-panel">
-    <form id="form-prenda">
-      <input type="text" id="input-nombre" placeholder="Nombre (ej: Remera blanca básica)" required>
-      <select id="input-categoria"></select>
-      <input type="text" id="input-color" placeholder="Color (opcional)">
-      <div id="input-estaciones" class="fila-checks"></div>
-      <select id="input-formalidad">
-        <option value="casual">Casual</option>
-        <option value="formal">Formal</option>
-        <option value="deportivo">Deportivo</option>
-      </select>
-      <input type="url" id="input-imagen" placeholder="URL de la imagen" required>
-      <div class="form-actions">
-        <button type="submit" class="btn-primario">+ Agregar prenda</button>
-      </div>
-    </form>
-
-    <div id="grid-ropero" class="grid-ropero"></div>
-  </section>
-
-  <section id="panel-outfit" class="tab-panel oculto">
-    <div class="lienzo-toolbar">
-      <button id="btn-reset-lienzo" class="icon-btn" title="Vaciar lienzo">↺</button>
-      <span class="lienzo-titulo">Outfit</span>
-      <button id="btn-guardar-outfit" class="btn-primario btn-chico">Guardar</button>
-    </div>
-
-    <div id="lienzo" class="lienzo">
-      <p id="lienzo-vacio" class="vacio-lienzo">Tocá "Agregar prendas" para empezar a armar el outfit.</p>
-    </div>
-
-    <button id="btn-abrir-picker" class="btn-agregar-prendas">+ Agregar prendas</button>
-  </section>
-
-  <div id="picker-overlay" class="picker-overlay oculto">
-    <div class="picker-sheet">
-      <div class="picker-header">
-        <strong>Elegí prendas</strong>
-        <button id="btn-cerrar-picker" class="icon-btn">✕</button>
-      </div>
-      <div id="picker-grid" class="grid-ropero"></div>
-    </div>
-  </div>
-
-  <section id="panel-ia" class="tab-panel oculto">
-    <div class="panel-ia-controles">
-      <select id="input-ocasion">
-        <option value="casual">Casual</option>
-        <option value="formal">Formal</option>
-        <option value="deportivo">Deportivo</option>
-      </select>
-      <button id="btn-sugerir" class="btn-primario">Generar</button>
-    </div>
-
-    <p class="ayuda-carrusel">Deslizá cada fila para ver todas tus prendas de esa categoría. Tocá "Generar" y la IA va a deslizar cada fila hasta la combinación elegida.</p>
-
-    <div id="carruseles-categorias"></div>
-    <div id="resultado-ia"></div>
-  </section>
-</main>
+<div class="contador" id="contador"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/supabaseClient.js"></script>
 <script src="js/dataStore.js"></script>
-<script src="js/ai.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
