@@ -27,41 +27,41 @@ create policy "remeras_insert" on remeras for insert with check (true);
 create policy "remeras_update" on remeras for update using (true);
 create policy "remeras_delete" on remeras for delete using (true);
 
--- Seed de muestra (Unsplash) con tags completos, mientras me pasás tus remeras reales.
+-- Remeras reales (las imágenes viven en /img/remeras dentro del repo).
 insert into remeras (nombre, imagen_url, colores, estilos, climas, corte, ocasiones, diseno, tipo_outfit, notas) values
 (
-  'Remera blanca básica',
-  'https://images.unsplash.com/photo-1620799139834-6b8f844fbe61?w=800&q=75&auto=format&fit=crop',
-  '{"blanco"}',
-  '{"casual","básico","minimalista"}',
+  'Remera The Smiths blanca',
+  'img/remeras/smiths-meat-is-murder.png',
+  '{"blanco","verde oscuro","negro"}',
+  '{"band tee","vintage","indie","alternativo","streetwear"}',
+  '{"verano","entretiempo"}',
+  'oversized',
+  '{"casual","recital","salida","juntada"}',
+  'estampado gráfico fotográfico (foto de álbum) + texto vertical lateral con el nombre de la banda',
+  '{"streetwear","indie","casual"}',
+  'Band tee estilo vintage, base blanca, gráfico central protagonista + texto lateral verde. Buena pieza statement; combina con jean recto u oversized y zapatillas retro.'
+),
+(
+  'Remera Adidas Originals verde',
+  'img/remeras/adidas-originals-verde.png',
+  '{"verde","negro","amarillo"}',
+  '{"deportivo","retro","casual","streetwear"}',
   '{"verano","entretiempo"}',
   'regular',
-  '{"casual","laburo informal","salida de día"}',
-  'liso',
-  '{"casual","smart casual","athleisure"}',
-  'Comodín, combina con todo. Base perfecta para capas.'
+  '{"casual","deporte","salida de día"}',
+  'colorblock con tres rayas y logo trébol, estilo retro fútbol/deportivo',
+  '{"deportivo","casual","athleisure","retro"}',
+  'Remera deportiva de marca, corte regular. Buena base para looks retro o deportivos; combina con jogging, jean o short.'
 ),
 (
-  'Remera negra estampada',
-  'https://images.unsplash.com/photo-1604508230015-5a54faf1fa56?w=800&q=75&auto=format&fit=crop',
-  '{"negro"}',
-  '{"streetwear","urbano","statement"}',
-  '{"entretiempo","invierno templado"}',
-  'regular',
-  '{"salida de noche","casual","juntada"}',
-  'estampado gráfico',
-  '{"streetwear","urbano"}',
-  'Buena para looks con más personalidad, protagonista del outfit.'
-),
-(
-  'Remera oversized streetwear',
-  'https://images.unsplash.com/photo-1635650804263-1a1941e14df5?w=800&q=75&auto=format&fit=crop',
-  '{"gris"}',
-  '{"streetwear","urbano","relajado"}',
+  'Remera negra encapuchado',
+  'img/remeras/encapuchado-negra.png',
+  '{"negro","beige"}',
+  '{"streetwear","urbano","oscuro","statement"}',
   '{"entretiempo","invierno templado"}',
   'oversized',
-  '{"casual","juntada","urbano"}',
-  'liso con detalle de logo',
-  '{"streetwear","urbano"}',
-  'Se banca cadenas/gorra, buena base para looks urbanos sueltos.'
+  '{"salida de noche","casual","juntada"}',
+  'estampado gráfico ilustrado (retrato encapuchado con lentes de sol) más firma cursiva',
+  '{"streetwear","urbano","dark"}',
+  'Remera negra oversized con gráfico grande centrado, estética dark/streetwear. Protagonista del outfit; combina con cargo o jogger negro.'
 );
