@@ -69,7 +69,7 @@ function render(inicial = false) {
     const brillo = Math.max(0.3, 1 - dist * 0.22);
     const z = Math.round(100 - dist * 10);
 
-    card.style.transform = `translateX(${traslX}px) translateZ(${-dist * 90}px) rotateY(${rotY}deg) scale(${escala})`;
+    card.style.transform = `translate(-50%, -50%) translateX(${traslX}px) translateZ(${-dist * 90}px) rotateY(${rotY}deg) scale(${escala})`;
     card.style.opacity = opacidad;
     card.style.filter = `brightness(${brillo})`;
     card.style.zIndex = z;
