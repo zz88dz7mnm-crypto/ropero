@@ -40,12 +40,12 @@ body {
 
 #fila-pantalones {
   top: 52.382vh;
-  height: 30.245vh; /* pantalón: centro absoluto 69.182vh, altura 38vh */
+  height: 30.5895vh; /* pantalón: centro absoluto 69.182vh, altura 38vh */
 }
 
 #fila-zapatillas {
-  top: 82.627vh;
-  height: 17.373vh; /* zapatilla: centro absoluto 86.822vh, altura de referencia 19.5vh */
+  top: 82.9715vh; /* corrida 0.3445vh hacia abajo: el doble de espacio a la del pantalón */
+  height: 17.0285vh; /* zapatilla: centro absoluto 87.1665vh, altura de referencia 19.5vh */
 }
 
 .stage {
@@ -69,19 +69,19 @@ body {
 }
 
 #fila-gorras .card {
-  top: 15.429vh;
+  top: 15.25625vh; /* gorra al 60%, conjunto recorrido -4.97275vh para balancear márgenes */
 }
 
 #fila-remeras .card {
-  top: 13.572vh; /* absoluto 42.082vh - los 28.51vh donde arranca la fila */
+  top: 8.59925vh;
 }
 
 #fila-pantalones .card {
-  top: 16.8vh; /* absoluto 69.182vh - los 52.382vh donde arranca la fila */
+  top: 11.82725vh;
 }
 
 #fila-zapatillas .card {
-  top: 4.195vh; /* absoluto 86.822vh - los 82.627vh donde arranca la fila */
+  top: -0.77775vh;
 }
 
 .card.en-movimiento {
@@ -131,31 +131,31 @@ body {
      imágenes van al 83% del tamaño de desktop (ALTURA_VH_MOBILE en app.js)
      para que las prendas no se vean demasiado anchas en pantallas angostas. */
   #fila-gorras {
-    height: 32.103vh;
+    height: 27.942vh;
   }
   #fila-remeras {
-    top: 32.103vh;
+    top: 27.942vh;
     height: 20.027vh;
   }
   #fila-pantalones {
-    top: 52.13vh;
-    height: 26.693vh;
+    top: 47.969vh;
+    height: 26.869vh;
   }
   #fila-zapatillas {
-    top: 78.823vh;
-    height: 21.177vh;
+    top: 74.838vh;
+    height: 25.162vh;
   }
   #fila-gorras .card {
-    top: 21.066vh;
+    top: 20.8895vh;
   }
   #fila-remeras .card {
-    top: 11.452vh;
+    top: 11.4515vh;
   }
   #fila-pantalones .card {
-    top: 13.971vh;
+    top: 13.9705vh;
   }
   #fila-zapatillas .card {
-    top: 1.976vh;
+    top: 2.1535vh;
   }
   #fila-remeras .card img {
     height: 20.75vh;
