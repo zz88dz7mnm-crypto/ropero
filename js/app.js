@@ -23,12 +23,12 @@ const ALTURA_VH_DESKTOP = {
 };
 
 const ALTURA_VH_MOBILE = {
-  "img/gorras/padres-marron.png": 15.2388,
-  "img/gorras/negra-lisa.png": 7.87185,
-  "img/gorras/yankees-roja.png": 7.9407,
-  "img/zapatillas/vans-skhi-negra.png": 10.05,
-  "img/zapatillas/timberland-miel.png": 8.32,
-  "img/zapatillas/vans-halfcab-negra.png": 16.19,
+  "img/gorras/padres-marron.png": 21.84,
+  "img/gorras/negra-lisa.png": 11.28,
+  "img/gorras/yankees-roja.png": 11.38,
+  "img/zapatillas/vans-skhi-negra.png": 14.4,
+  "img/zapatillas/timberland-miel.png": 11.92,
+  "img/zapatillas/vans-halfcab-negra.png": 23.2,
 };
 
 document.addEventListener("DOMContentLoaded", init);

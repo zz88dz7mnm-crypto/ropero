@@ -129,38 +129,41 @@ body {
 }
 
 @media (max-width: 600px) {
+  /* Mobile agrandado ~43% respecto de antes para llenar la pantalla (quedaba
+     con ~37vh de margen negro sin usar); mismo margen de seguridad 0.3vh
+     entre prendas, verificado en las 9 combinaciones de cada par. */
   #fila-gorras {
-    height: 32.36vh;
+    height: 20.6172vh;
   }
   #fila-remeras {
-    top: 32.36vh;
-    height: 14.829vh;
+    top: 20.6172vh;
+    height: 21.755vh;
   }
   #fila-pantalones {
-    top: 47.189vh;
-    height: 25.512vh;
+    top: 42.3722vh;
+    height: 36.4332vh;
   }
   #fila-zapatillas {
-    top: 72.701vh;
-    height: 27.299vh;
+    top: 78.8054vh;
+    height: 21.1946vh;
   }
   #fila-gorras .card {
-    top: 26.7381vh;
+    top: 13.9204vh;
   }
   #fila-remeras .card {
-    top: 7.0335vh;
+    top: 10.6464vh;
   }
   #fila-pantalones .card {
-    top: 13.1914vh;
+    top: 18.8405vh;
   }
   #fila-zapatillas .card {
-    top: 4.6448vh;
+    top: 6.5926vh;
   }
   #fila-remeras .card img {
-    height: 20.75vh;
+    height: 29.74vh;
   }
   #fila-pantalones .card img {
-    height: 31.54vh;
+    height: 45.204vh;
   }
 }
 
