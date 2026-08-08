@@ -16,12 +16,14 @@ body {
   position: relative;
 }
 
-/* Cuatro filas (gorra / remera / pantalón / zapatilla), cada una su propia
-   "zona" para el drag/trackpad sin pisarse. Las imágenes se usan tal cual
-   (sin recortar ni editar) — lo único que se ajusta es el tamaño de
-   visualización (acá y en ALTURA_VH de app.js). Proporción tipo cuerpo real:
-   pantalón > remera > zapatilla > gorra, todo bien junto y ocupando la
-   pantalla (poco margen negro arriba/abajo). */
+/* Cuatro filas (gorra / remera / pantalón / zapatilla). Las posiciones de
+   acá salen de un análisis de contenido real: para cada par de filas
+   vecinas se midió, sobre las 9 combinaciones posibles de fotos, cuál es
+   la distancia MÍNIMA entre el borde visible de una prenda y el de la
+   siguiente, y se corrigió para que ese mínimo sea siempre >= 0.3vh (nunca
+   se tocan, sin importar qué foto esté centrada en cada fila) sin dejar
+   de estar lo más juntas posible. Las imágenes se usan tal cual (sin
+   recortar ni editar) — lo único que se ajusta es tamaño/posición. */
 .fila {
   position: absolute;
   left: 0;
@@ -30,22 +32,22 @@ body {
 
 #fila-gorras {
   top: 0;
-  height: 28.51vh; /* gorra al 300%: centro absoluto 15.429vh, altura de referencia 24vh */
+  height: 28.666vh; /* gorra: centro absoluto 21.9233vh */
 }
 
 #fila-remeras {
-  top: 28.51vh;
-  height: 23.787vh; /* achicada 0.085vh: menos hit-zone hacia el pantalón (gap remera-pantalón un poco más chico) */
+  top: 28.666vh;
+  height: 17.805vh; /* remera: centro absoluto 37.10925vh (ancla, no se mueve) */
 }
 
 #fila-pantalones {
-  top: 52.297vh; /* -0.085vh: gap remera-pantalón apenas más chico */
-  height: 31.0235vh;
+  top: 46.471vh;
+  height: 30.676vh; /* pantalón: centro absoluto 62.3332vh */
 }
 
 #fila-zapatillas {
-  top: 83.3205vh; /* +0.349vh: gap pantalón-zapatilla apenas más grande */
-  height: 16.6795vh;
+  top: 77.147vh;
+  height: 22.853vh; /* zapatilla: centro absoluto 82.7101vh */
 }
 
 .stage {
@@ -69,19 +71,19 @@ body {
 }
 
 #fila-gorras .card {
-  top: 11.65725vh; /* gorra al 150% del 60% anterior, mantiene el gap a la remera */
+  top: 21.9233vh;
 }
 
 #fila-remeras .card {
-  top: 8.59925vh;
+  top: 8.443vh;
 }
 
 #fila-pantalones .card {
-  top: 11.82725vh;
+  top: 15.862vh;
 }
 
 #fila-zapatillas .card {
-  top: -0.77775vh;
+  top: 5.563vh;
 }
 
 .card.en-movimiento {
@@ -127,35 +129,32 @@ body {
 }
 
 @media (max-width: 600px) {
-  /* Mismo esqueleto vertical (en vh, ya responsive) que desktop; las
-     imágenes van al 83% del tamaño de desktop (ALTURA_VH_MOBILE en app.js)
-     para que las prendas no se vean demasiado anchas en pantallas angostas. */
   #fila-gorras {
-    height: 27.942vh;
+    height: 32.36vh;
   }
   #fila-remeras {
-    top: 27.942vh;
-    height: 19.942vh;
+    top: 32.36vh;
+    height: 14.829vh;
   }
   #fila-pantalones {
-    top: 47.884vh;
-    height: 27.303vh;
+    top: 47.189vh;
+    height: 25.512vh;
   }
   #fila-zapatillas {
-    top: 75.187vh;
-    height: 24.813vh;
+    top: 72.701vh;
+    height: 27.299vh;
   }
   #fila-gorras .card {
-    top: 17.9015vh;
+    top: 26.7381vh;
   }
   #fila-remeras .card {
-    top: 11.4515vh;
+    top: 7.0335vh;
   }
   #fila-pantalones .card {
-    top: 13.9705vh;
+    top: 13.1914vh;
   }
   #fila-zapatillas .card {
-    top: 2.1535vh;
+    top: 4.6448vh;
   }
   #fila-remeras .card img {
     height: 20.75vh;
