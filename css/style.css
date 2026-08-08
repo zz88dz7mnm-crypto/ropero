@@ -35,17 +35,17 @@ body {
 
 #fila-remeras {
   top: 28.51vh;
-  height: 23.872vh; /* remera: centro absoluto 42.082vh, altura 25vh */
+  height: 23.787vh; /* achicada 0.085vh: menos hit-zone hacia el pantalón (gap remera-pantalón un poco más chico) */
 }
 
 #fila-pantalones {
-  top: 52.382vh;
-  height: 30.5895vh; /* pantalón: centro absoluto 69.182vh, altura 38vh */
+  top: 52.297vh; /* -0.085vh: gap remera-pantalón apenas más chico */
+  height: 31.0235vh;
 }
 
 #fila-zapatillas {
-  top: 82.9715vh; /* corrida 0.3445vh hacia abajo: el doble de espacio a la del pantalón */
-  height: 17.0285vh; /* zapatilla: centro absoluto 87.1665vh, altura de referencia 19.5vh */
+  top: 83.3205vh; /* +0.349vh: gap pantalón-zapatilla apenas más grande */
+  height: 16.6795vh;
 }
 
 .stage {
@@ -69,7 +69,7 @@ body {
 }
 
 #fila-gorras .card {
-  top: 15.25625vh; /* gorra al 60%, conjunto recorrido -4.97275vh para balancear márgenes */
+  top: 11.65725vh; /* gorra al 150% del 60% anterior, mantiene el gap a la remera */
 }
 
 #fila-remeras .card {
@@ -135,18 +135,18 @@ body {
   }
   #fila-remeras {
     top: 27.942vh;
-    height: 20.027vh;
+    height: 19.942vh;
   }
   #fila-pantalones {
-    top: 47.969vh;
-    height: 26.869vh;
+    top: 47.884vh;
+    height: 27.303vh;
   }
   #fila-zapatillas {
-    top: 74.838vh;
-    height: 25.162vh;
+    top: 75.187vh;
+    height: 24.813vh;
   }
   #fila-gorras .card {
-    top: 20.8895vh;
+    top: 17.9015vh;
   }
   #fila-remeras .card {
     top: 11.4515vh;
