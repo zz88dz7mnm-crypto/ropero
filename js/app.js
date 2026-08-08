@@ -14,21 +14,21 @@ const SENSIBILIDAD_RUEDA = 1; // qué tan rápido responde el trackpad
 // quede parejo entre gorras y entre zapatillas. Es solo tamaño de
 // visualización, no toca el archivo.
 const ALTURA_VH_DESKTOP = {
-  "img/gorras/padres-marron.png": 13.1,
-  "img/gorras/negra-lisa.png": 6.8,
-  "img/gorras/yankees-roja.png": 6.9,
-  "img/zapatillas/vans-skhi-negra.png": 13.5,
-  "img/zapatillas/timberland-miel.png": 11.2,
-  "img/zapatillas/vans-halfcab-negra.png": 21.7,
+  "img/gorras/padres-marron.png": 8,
+  "img/gorras/negra-lisa.png": 4.13,
+  "img/gorras/yankees-roja.png": 4.17,
+  "img/zapatillas/vans-skhi-negra.png": 9.31,
+  "img/zapatillas/timberland-miel.png": 7.71,
+  "img/zapatillas/vans-halfcab-negra.png": 15,
 };
 
 const ALTURA_VH_MOBILE = {
-  "img/gorras/padres-marron.png": 10.9,
-  "img/gorras/negra-lisa.png": 5.6,
-  "img/gorras/yankees-roja.png": 5.7,
-  "img/zapatillas/vans-skhi-negra.png": 11.2,
-  "img/zapatillas/timberland-miel.png": 9.3,
-  "img/zapatillas/vans-halfcab-negra.png": 18.0,
+  "img/gorras/padres-marron.png": 6.64,
+  "img/gorras/negra-lisa.png": 3.43,
+  "img/gorras/yankees-roja.png": 3.46,
+  "img/zapatillas/vans-skhi-negra.png": 7.73,
+  "img/zapatillas/timberland-miel.png": 6.4,
+  "img/zapatillas/vans-halfcab-negra.png": 12.45,
 };
 
 document.addEventListener("DOMContentLoaded", init);
