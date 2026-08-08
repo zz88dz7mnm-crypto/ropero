@@ -30,22 +30,22 @@ body {
 
 #fila-gorras {
   top: 0;
-  height: 14.85vh; /* gorra: centro absoluto 10.775vh, altura de referencia 8vh */
+  height: 28.51vh; /* gorra al 300%: centro absoluto 15.429vh, altura de referencia 24vh */
 }
 
 #fila-remeras {
-  top: 14.85vh;
-  height: 25.15vh; /* remera: centro absoluto 27.425vh, altura 25vh */
+  top: 28.51vh;
+  height: 23.872vh; /* remera: centro absoluto 42.082vh, altura 25vh */
 }
 
 #fila-pantalones {
-  top: 40vh;
-  height: 38.15vh; /* pantalón: centro absoluto 59.075vh, altura 38vh */
+  top: 52.382vh;
+  height: 30.245vh; /* pantalón: centro absoluto 69.182vh, altura 38vh */
 }
 
 #fila-zapatillas {
-  top: 78.15vh;
-  height: 21.85vh; /* zapatilla: centro absoluto 85.725vh, altura de referencia 15vh */
+  top: 82.627vh;
+  height: 17.373vh; /* zapatilla: centro absoluto 86.822vh, altura de referencia 19.5vh */
 }
 
 .stage {
@@ -69,19 +69,19 @@ body {
 }
 
 #fila-gorras .card {
-  top: 10.775vh;
+  top: 15.429vh;
 }
 
 #fila-remeras .card {
-  top: 12.575vh; /* absoluto 27.425vh - los 14.85vh donde arranca la fila */
+  top: 13.572vh; /* absoluto 42.082vh - los 28.51vh donde arranca la fila */
 }
 
 #fila-pantalones .card {
-  top: 19.075vh; /* absoluto 59.075vh - los 40vh donde arranca la fila */
+  top: 16.8vh; /* absoluto 69.182vh - los 52.382vh donde arranca la fila */
 }
 
 #fila-zapatillas .card {
-  top: 7.575vh; /* absoluto 85.725vh - los 78.15vh donde arranca la fila */
+  top: 4.195vh; /* absoluto 86.822vh - los 82.627vh donde arranca la fila */
 }
 
 .card.en-movimiento {
@@ -127,44 +127,41 @@ body {
 }
 
 @media (max-width: 600px) {
+  /* Mismo esqueleto vertical (en vh, ya responsive) que desktop; las
+     imágenes van al 83% del tamaño de desktop (ALTURA_VH_MOBILE en app.js)
+     para que las prendas no se vean demasiado anchas en pantallas angostas. */
   #fila-gorras {
-    height: 20.83vh;
+    height: 32.103vh;
   }
   #fila-remeras {
-    top: 20.83vh;
-    height: 20.87vh;
+    top: 32.103vh;
+    height: 20.027vh;
   }
   #fila-pantalones {
-    top: 41.7vh;
-    height: 31.66vh;
+    top: 52.13vh;
+    height: 26.693vh;
   }
   #fila-zapatillas {
-    top: 73.36vh;
-    height: 26.64vh;
+    top: 78.823vh;
+    height: 21.177vh;
   }
   #fila-gorras .card {
-    top: 17.45vh;
+    top: 21.066vh;
   }
   #fila-remeras .card {
-    top: 10.435vh; /* absoluto 31.265vh - 20.83vh */
+    top: 11.452vh;
   }
   #fila-pantalones .card {
-    top: 15.83vh; /* absoluto 57.53vh - 41.7vh */
+    top: 13.971vh;
   }
   #fila-zapatillas .card {
-    top: 6.285vh; /* absoluto 79.645vh - 73.36vh */
-  }
-  #fila-gorras .card img {
-    height: 4vh;
+    top: 1.976vh;
   }
   #fila-remeras .card img {
-    height: 21vh;
+    height: 20.75vh;
   }
   #fila-pantalones .card img {
-    height: 32vh;
-  }
-  #fila-zapatillas .card img {
-    height: 7.5vh;
+    height: 31.54vh;
   }
 }
 
