@@ -8,6 +8,21 @@
 </head>
 <body>
 
+<button id="btn-menu" class="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div id="menu-overlay" class="menu-overlay"></div>
+
+<nav id="menu-lateral" class="menu-lateral" aria-hidden="true">
+  <div class="menu-items">
+    <button class="menu-item" data-accion="guardados">Guardados</button>
+    <button class="menu-item" data-accion="generar">Generar</button>
+    <button class="menu-item" data-accion="random">Random</button>
+    <button class="menu-item" data-accion="favoritos">Favoritos</button>
+  </div>
+</nav>
+
 <div class="fila" id="fila-gorras">
   <div class="stage" id="stage-gorras">
     <div class="track" id="track-gorras"></div>
@@ -37,5 +52,6 @@
 <script src="js/supabaseClient.js"></script>
 <script src="js/dataStore.js"></script>
 <script src="js/app.js"></script>
+<script src="js/menu.js"></script>
 </body>
 </html>
