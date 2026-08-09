@@ -87,3 +87,32 @@ async function crearZapatilla(zapatilla) {
   if (error) throw error;
   return data;
 }
+
+async function listarGuardados() {
+  const client = getSupabaseClient();
+  if (!client) return [];
+  const { data, error } = await client
+    .from("outfits_guardados")
+    .select("*")
+    .order("creado_en", { ascending: false });
+  if (error) {
+    console.error("Error listando guardados:", error);
+    return [];
+  }
+  return data;
+}
+
+async function crearGuardado(guardado) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no está configurado todavía.");
+  const { data, error } = await client.from("outfits_guardados").insert([guardado]).select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function borrarGuardado(id) {
+  const client = getSupabaseClient();
+  if (!client) throw new Error("Supabase no está configurado todavía.");
+  const { error } = await client.from("outfits_guardados").delete().eq("id", id);
+  if (error) throw error;
+}

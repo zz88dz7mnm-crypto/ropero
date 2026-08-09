@@ -75,7 +75,7 @@ function montarFila(categoria, filaId, stageId, trackId, items, mensajeVacio) {
   }
   const trackEl = document.getElementById(trackId);
   const stageEl = document.getElementById(stageId);
-  const cf = crearCoverflow(trackEl, items);
+  const cf = crearCoverflow(trackEl, items, categoria);
   cf.construir();
   cf.render(true);
   habilitarGestos(stageEl, cf);
@@ -91,7 +91,7 @@ function mostrarVacio(filaId, mensaje) {
   fila.appendChild(div);
 }
 
-function crearCoverflow(trackEl, items) {
+function crearCoverflow(trackEl, items, categoria) {
   const estado = { items, indiceActual: 0, arrastrando: false };
 
   function construir() {
@@ -142,6 +142,10 @@ function crearCoverflow(trackEl, items) {
     estado.indiceActual = Math.max(0, Math.min(items.length - 1, indice));
     trackEl.querySelectorAll(".card").forEach((c) => c.classList.remove("en-movimiento"));
     render();
+    // Avisa que esta fila terminó de asentarse en una prenda (click, drag,
+    // rueda, o animación de Generar/Guardados) — js/guardar.js lo escucha
+    // para saber si el outfit que está armado ahora mismo ya está guardado.
+    document.dispatchEvent(new CustomEvent("ropero:fila-asentada", { detail: { categoria } }));
   }
 
   return { estado, construir, render, irA };
