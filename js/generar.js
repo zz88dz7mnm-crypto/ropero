@@ -223,7 +223,9 @@ function generarOutfit(criterios) {
   }
 
   const datos = window.Ropero.datos;
-  const candidatosRemera = criterios.tipoSuperior === "remera" ? datos.remeras : [];
+  // "tipo" viene de la base (remera/buzo/campera); si alguna prenda vieja no
+  // lo tuviera todavía, la tratamos como remera por defecto.
+  const candidatosRemera = datos.remeras.filter((r) => (r.tipo || "remera") === criterios.tipoSuperior);
 
   const elegidos = {
     gorras: elegirPrenda("gorras", datos.gorras, criterios),
