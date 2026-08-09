@@ -14,9 +14,6 @@ const SENSIBILIDAD_RUEDA = 1; // qué tan rápido responde el trackpad
 // quede parejo entre gorras y entre zapatillas. Es solo tamaño de
 // visualización, no toca el archivo.
 const ALTURA_VH_DESKTOP = {
-  "img/gorras/padres-marron.png": 18.36,
-  "img/gorras/negra-lisa.png": 9.47835,
-  "img/gorras/yankees-roja.png": 9.57015,
   "img/gorras/billabong-marron.png": 8.2258,
   "img/gorras/newera-verde-5panel.png": 7.8948,
   "img/gorras/newera-crudo-script.png": 8.8867,
@@ -31,9 +28,6 @@ const ALTURA_VH_DESKTOP = {
 };
 
 const ALTURA_VH_MOBILE = {
-  "img/gorras/padres-marron.png": 21.84,
-  "img/gorras/negra-lisa.png": 11.28,
-  "img/gorras/yankees-roja.png": 11.38,
   "img/gorras/billabong-marron.png": 9.7854,
   "img/gorras/newera-verde-5panel.png": 9.3916,
   "img/gorras/newera-crudo-script.png": 10.5715,

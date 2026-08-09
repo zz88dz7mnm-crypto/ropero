@@ -32,7 +32,9 @@ body {
 
 #fila-gorras {
   top: 0;
-  height: 28.666vh; /* gorra: centro absoluto 21.9233vh */
+  height: 28.666vh; /* gorra: centro absoluto 21.0757vh (subida 0.8476vh: con las 8 gorras
+     reales nuevas, la combinación más ajustada — Powell Peralta + remera Adidas verde —
+     quedaba en -0.4976vh, superpuesta; medido con el mismo método de canal alpha) */
 }
 
 #fila-remeras {
@@ -71,7 +73,7 @@ body {
 }
 
 #fila-gorras .card {
-  top: 21.9233vh;
+  top: 21.0757vh;
 }
 
 #fila-remeras .card {
@@ -115,7 +117,8 @@ body {
 }
 
 #fila-pantalones .card img {
-  height: 38vh;
+  height: 37.088vh; /* -2.4%: el par más ajustado (remera encapuchado + pantalón marrón,
+     y pantalón crudo + Timberland) medía por debajo del mínimo 0.3vh por ambos lados */
 }
 
 #fila-zapatillas .card img {
@@ -148,7 +151,7 @@ body {
     height: 21.1946vh;
   }
   #fila-gorras .card {
-    top: 13.9204vh;
+    top: 12.2565vh; /* subida 1.6639vh: mismo motivo que en desktop, gap gorra->remera daba -1.3139vh */
   }
   #fila-remeras .card {
     top: 10.6464vh;
@@ -163,7 +166,7 @@ body {
     height: 29.74vh;
   }
   #fila-pantalones .card img {
-    height: 45.204vh;
+    height: 44.1643vh; /* -2.4%, mismo motivo que en desktop */
   }
 }
 
