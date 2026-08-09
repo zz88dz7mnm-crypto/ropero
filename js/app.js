@@ -31,6 +31,11 @@ const ALTURA_VH_MOBILE = {
   "img/zapatillas/vans-halfcab-negra.png": 23.2,
 };
 
+// Registro global chico: js/generar.js lo usa para leer las prendas
+// cargadas y para animar cada fila hasta la prenda elegida (irA). No cambia
+// nada de cómo funciona el coverflow en sí.
+window.Ropero = { datos: {}, coverflows: {} };
+
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -53,13 +58,17 @@ async function init() {
   // primera opción del carrusel, para poder armar el outfit sin gorra.
   const gorrasConVacio = [{ id: "sin-gorro", nombre: "Sin gorro", imagen_url: null }, ...gorras];
 
-  montarFila("fila-gorras", "stage-gorras", "track-gorras", gorrasConVacio, "Todavía no hay gorras cargadas.");
-  montarFila("fila-remeras", "stage-remeras", "track-remeras", remeras, "Todavía no hay remeras cargadas.");
-  montarFila("fila-pantalones", "stage-pantalones", "track-pantalones", pantalones, "Todavía no hay pantalones cargados.");
-  montarFila("fila-zapatillas", "stage-zapatillas", "track-zapatillas", zapatillas, "Todavía no hay zapatillas cargadas.");
+  window.Ropero.datos = { gorras: gorrasConVacio, remeras, pantalones, zapatillas };
+
+  montarFila("gorras", "fila-gorras", "stage-gorras", "track-gorras", gorrasConVacio, "Todavía no hay gorras cargadas.");
+  montarFila("remeras", "fila-remeras", "stage-remeras", "track-remeras", remeras, "Todavía no hay remeras cargadas.");
+  montarFila("pantalones", "fila-pantalones", "stage-pantalones", "track-pantalones", pantalones, "Todavía no hay pantalones cargados.");
+  montarFila("zapatillas", "fila-zapatillas", "stage-zapatillas", "track-zapatillas", zapatillas, "Todavía no hay zapatillas cargadas.");
+
+  document.dispatchEvent(new CustomEvent("ropero:listo"));
 }
 
-function montarFila(filaId, stageId, trackId, items, mensajeVacio) {
+function montarFila(categoria, filaId, stageId, trackId, items, mensajeVacio) {
   if (!items.length) {
     mostrarVacio(filaId, mensajeVacio);
     return;
@@ -70,6 +79,7 @@ function montarFila(filaId, stageId, trackId, items, mensajeVacio) {
   cf.construir();
   cf.render(true);
   habilitarGestos(stageEl, cf);
+  window.Ropero.coverflows[categoria] = cf;
 }
 
 function mostrarVacio(filaId, mensaje) {
