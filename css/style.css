@@ -601,3 +601,119 @@ body.favoritos-abierto .panel-favoritos {
   text-align: center;
   padding: 24px 8px 8px;
 }
+
+/* ===== Rueda semicircular (demo: accesorios / camperas) ===== */
+/* Bump pegado al borde derecho; al tocarlo expande un arco de opciones que
+   se arrastra verticalmente para rotar, como si fuera un círculo cortado al
+   medio (el centro imaginario del círculo queda fuera de la pantalla). Ver
+   js/rueda.js para la matemática del arco. */
+
+.rueda-wrap {
+  position: fixed;
+  right: 0;
+  z-index: 900;
+  transform: translateY(-50%);
+}
+
+.rueda-bump {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-right: none;
+  border-radius: 34px 0 0 34px;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rueda-wrap.expandida .rueda-bump {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.rueda-arco {
+  position: absolute;
+  top: 34px; /* mismo eje vertical que el centro del bump */
+  right: 10px; /* mismo eje horizontal que el centro del bump */
+  width: 0;
+  height: 0;
+  touch-action: none;
+}
+
+.rueda-opcion {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  margin: -22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: transform 0.45s cubic-bezier(0.22, 0.9, 0.24, 1), opacity 0.3s ease;
+}
+
+.rueda-opcion.en-movimiento {
+  transition: none;
+}
+
+.rueda-opcion img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.rueda-opcion.rueda-tick {
+  border-color: #fff;
+}
+
+/* Se puede interactuar con las opciones (click) apenas está expandida; el
+   arrastre en sí engancha en .rueda-wrap para que ande aunque el dedo no
+   arranque justo sobre un puntito. */
+.rueda-wrap.expandida .rueda-opcion {
+  pointer-events: auto;
+}
+
+.rueda-flotante {
+  position: fixed;
+  width: 34px;
+  height: 34px;
+  margin: -17px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+  z-index: 110;
+}
+
+.rueda-flotante.activo {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.rueda-flotante img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+#rueda-flotante-accesorios {
+  top: 26vh;
+  left: 58%;
+}
+
+#rueda-flotante-camperas {
+  top: 40vh;
+  left: 42%;
+}

@@ -57,7 +57,7 @@ async function init() {
     return;
   }
 
-  const [gorras, remeras, pantalones, zapatillas] = await Promise.all([
+  const [gorras, remerasYBuzos, pantalones, zapatillas] = await Promise.all([
     listarGorras(),
     listarRemeras(),
     listarPantalones(),
@@ -68,6 +68,14 @@ async function init() {
   // primera opción del carrusel, para poder armar el outfit sin gorra.
   const gorrasConVacio = [{ id: "sin-gorro", nombre: "Sin gorro", imagen_url: null }, ...gorras];
 
+  // Tren superior: remeras y buzos comparten el mismo eje/fila (una sola
+  // pasada al deslizar), pero agrupados — primero pasan todas las remeras y
+  // recién después todos los buzos, nunca mezclados. Las camperas NO entran
+  // acá: van a ser su propio widget aparte (rueda de accesorios/abrigo).
+  // Dentro de cada grupo se respeta el orden que ya traía la consulta
+  // (creado_en desc), porque filter() no reordena.
+  const remeras = agruparPorTipo(remerasYBuzos, ["remera", "buzo"]);
+
   window.Ropero.datos = { gorras: gorrasConVacio, remeras, pantalones, zapatillas };
 
   montarFila("gorras", "fila-gorras", "stage-gorras", "track-gorras", gorrasConVacio, "Todavía no hay gorras cargadas.");
@@ -76,6 +84,14 @@ async function init() {
   montarFila("zapatillas", "fila-zapatillas", "stage-zapatillas", "track-zapatillas", zapatillas, "Todavía no hay zapatillas cargadas.");
 
   document.dispatchEvent(new CustomEvent("ropero:listo"));
+}
+
+// Agrupa items por `tipo` respetando el orden de la lista `orden` (ej.
+// ["remera","buzo"] => primero todas las remeras, después todos los buzos).
+// Los items con un tipo que no está en `orden` quedan afuera (así se excluye
+// "campera" del eje de tren superior sin tener que tocar la consulta SQL).
+function agruparPorTipo(items, orden) {
+  return orden.flatMap((tipo) => items.filter((it) => (it.tipo || "remera") === tipo));
 }
 
 function montarFila(categoria, filaId, stageId, trackId, items, mensajeVacio) {
