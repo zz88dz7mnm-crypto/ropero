@@ -88,31 +88,31 @@ async function crearZapatilla(zapatilla) {
   return data;
 }
 
-async function listarGuardados() {
+async function listarFavoritos() {
   const client = getSupabaseClient();
   if (!client) return [];
   const { data, error } = await client
-    .from("outfits_guardados")
+    .from("outfits_favoritos")
     .select("*")
     .order("creado_en", { ascending: false });
   if (error) {
-    console.error("Error listando guardados:", error);
+    console.error("Error listando favoritos:", error);
     return [];
   }
   return data;
 }
 
-async function crearGuardado(guardado) {
+async function crearFavorito(favorito) {
   const client = getSupabaseClient();
   if (!client) throw new Error("Supabase no está configurado todavía.");
-  const { data, error } = await client.from("outfits_guardados").insert([guardado]).select().single();
+  const { data, error } = await client.from("outfits_favoritos").insert([favorito]).select().single();
   if (error) throw error;
   return data;
 }
 
-async function borrarGuardado(id) {
+async function borrarFavorito(id) {
   const client = getSupabaseClient();
   if (!client) throw new Error("Supabase no está configurado todavía.");
-  const { error } = await client.from("outfits_guardados").delete().eq("id", id);
+  const { error } = await client.from("outfits_favoritos").delete().eq("id", id);
   if (error) throw error;
 }

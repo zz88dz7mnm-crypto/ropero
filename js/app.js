@@ -143,8 +143,8 @@ function crearCoverflow(trackEl, items, categoria) {
     trackEl.querySelectorAll(".card").forEach((c) => c.classList.remove("en-movimiento"));
     render();
     // Avisa que esta fila terminó de asentarse en una prenda (click, drag,
-    // rueda, o animación de Generar/Guardados) — js/guardar.js lo escucha
-    // para saber si el outfit que está armado ahora mismo ya está guardado.
+    // rueda, o animación de Generar/Favoritos/Random) — js/favoritos.js lo
+    // escucha para saber si el outfit armado ahora mismo ya es favorito.
     document.dispatchEvent(new CustomEvent("ropero:fila-asentada", { detail: { categoria } }));
   }
 
