@@ -53,9 +53,9 @@ body {
 
 #fila-gorras {
   top: 0;
-  height: 28.666vh; /* gorra: centro absoluto 21.0757vh (subida 0.8476vh: con las 8 gorras
-     reales nuevas, la combinación más ajustada — Powell Peralta + remera Adidas verde —
-     quedaba en -0.4976vh, superpuesta; medido con el mismo método de canal alpha) */
+  height: 28.666vh; /* gorra: centro absoluto 20.5757vh (0.5vh más arriba a pedido
+     del usuario, para separar un poco más gorra y remera; peor caso pasa de
+     0.35vh a 0.85vh de margen — Powell Peralta + remera Adidas verde) */
 }
 
 #fila-remeras {
@@ -94,7 +94,7 @@ body {
 }
 
 #fila-gorras .card {
-  top: 21.0757vh;
+  top: 20.5757vh;
 }
 
 #fila-remeras .card {
@@ -172,7 +172,7 @@ body {
     height: 21.1946vh;
   }
   #fila-gorras .card {
-    top: 12.2565vh; /* subida 1.6639vh: mismo motivo que en desktop, gap gorra->remera daba -1.3139vh */
+    top: 11.7565vh; /* 0.5vh más arriba que antes, mismo motivo que en desktop */
   }
   #fila-remeras .card {
     top: 10.6464vh;
