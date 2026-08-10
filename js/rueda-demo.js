@@ -11,12 +11,20 @@
 // - dotAlturaPx: la vista chica dentro de la rueda misma — también sin
 //   recorte circular (a pedido del usuario, "esa es la gracia"), pero más
 //   chica que el flotante porque conviven varias en el arco a la vez.
+//   Escalados x2/3 el 10-ago-2026 (junto con RADIO_CAMPERAS más abajo) a
+//   pedido del usuario — "la rueda esta MUUUY grande". Se achican radio y
+//   puntos en la misma proporción para no reintroducir superposición entre
+//   ellos (la relación punto/espaciado que ya se había ajustado queda igual).
 const ALTURA_CAMPERAS_VH = {
-  "img/camperas/corderoy-redtap-marron.png": { desktop: 17.572, mobile: 20.907, dotPx: 59 },
-  "img/camperas/bomber-verde.png": { desktop: 17.377, mobile: 20.677, dotPx: 59 },
-  "img/camperas/puffer-negra.png": { desktop: 18.964, mobile: 22.563, dotPx: 64 },
-  "img/camperas/puffer-negra-capucha.png": { desktop: 16.871, mobile: 20.079, dotPx: 57 },
+  "img/camperas/corderoy-redtap-marron.png": { desktop: 17.572, mobile: 20.907, dotPx: 39 },
+  "img/camperas/bomber-verde.png": { desktop: 17.377, mobile: 20.677, dotPx: 39 },
+  "img/camperas/puffer-negra.png": { desktop: 18.964, mobile: 22.563, dotPx: 43 },
+  "img/camperas/puffer-negra-capucha.png": { desktop: 16.871, mobile: 20.079, dotPx: 38 },
 };
+
+// Radio más chico específicamente para camperas (el default de 150, en
+// RUEDA_RADIO de rueda.js, lo sigue usando accesorios sin cambios).
+const RADIO_CAMPERAS = 100;
 
 document.addEventListener("ropero:listo", () => {
   const camperas = (window.Ropero.datos.camperas || []).map((c) => {
@@ -33,6 +41,7 @@ document.addEventListener("ropero:listo", () => {
   crearRuedaSemicircular({
     id: "camperas",
     top: "26vh",
+    radio: RADIO_CAMPERAS,
     opciones: camperas.length
       ? camperas
       : [

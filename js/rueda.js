@@ -11,11 +11,16 @@
 // reales de ninguna de las dos). El día que haya fotos reales, cada "opción"
 // simplemente lleva `imagen_url` en vez de `color` y se muestra igual.
 
-const RUEDA_RADIO = 150; // px, radio del círculo imaginario (subido de 128 para dar lugar a puntos más grandes sin que se pisen)
-const RUEDA_PASO_GRADOS = 27; // separación angular entre opciones
+const RUEDA_RADIO = 150; // px, radio del círculo imaginario por defecto (accesorios sigue usando este)
+const RUEDA_PASO_GRADOS = 27; // separación angular entre opciones, por defecto
 const RUEDA_ESPACIADO_PX = 70; // px de arrastre vertical = "pasar una opción"
 
-function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
+// radio/pasoGrados son configurables por instancia (ej. camperas usa un
+// radio más chico que el default de accesorios, ver rueda-demo.js) — el
+// tamaño de los puntos se escala en la misma proporción desde afuera
+// (dotAlturaPx), así la relación punto/espaciado que evita que se pisen se
+// mantiene igual aunque la rueda entera se vea más chica.
+function crearRuedaSemicircular({ id, top, opciones, onElegir, radio = RUEDA_RADIO, pasoGrados = RUEDA_PASO_GRADOS }) {
   const html = `
     <div class="rueda-wrap" id="rueda-${id}" style="top:${top}">
       <button class="rueda-bump" id="rueda-bump-${id}" aria-label="Abrir selector" aria-expanded="false"></button>
@@ -63,12 +68,15 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
       const i = Number(dot.dataset.index);
       const offset = i - estado.indiceActual;
       const dist = Math.min(Math.abs(offset), 4);
-      const angulo = Math.max(-96, Math.min(96, offset * RUEDA_PASO_GRADOS));
+      const angulo = Math.max(-96, Math.min(96, offset * pasoGrados));
       const rad = (angulo * Math.PI) / 180;
-      const tx = -Math.cos(rad) * RUEDA_RADIO;
-      const ty = Math.sin(rad) * RUEDA_RADIO;
+      const tx = -Math.cos(rad) * radio;
+      const ty = Math.sin(rad) * radio;
       const escala = Math.max(0.42, 1 - dist * 0.17);
-      const opacidad = Math.max(0, 1 - dist * 0.32);
+      // Más visibles mientras están en el arco (antes bajaba casi a 0 de
+      // opacidad desde la 3ra opción de distancia — "muy translúcidas u
+      // opacas", pedido del usuario 10-ago-2026): piso de 0.55 en vez de 0.
+      const opacidad = Math.max(0.55, 1 - dist * 0.15);
 
       // translate(-50%,-50%) primero: centra la caja en su propio punto de
       // anclaje sin importar el tamaño (antes era un margin fijo de -22px,
