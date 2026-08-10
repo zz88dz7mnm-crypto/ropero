@@ -16,27 +16,25 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: #dde7ec;
+  background: #e7e3da;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Fondo claro y neutro (10-ago-2026, a pedido del usuario): antes era negro
-   con textura — se cambia a un celeste grisáceo suave, tipo fondo de
-   estudio/foto de producto, para que los COLORES REALES de cada prenda se
-   lean bien (un fondo negro exigía demasiado contraste y hacía que prendas
-   oscuras se perdieran contra el fondo, además de "tironear" la percepción
-   del color). Un solo degradé radial suave (más claro en el centro, un
-   toque más saturado hacia los bordes) da el aire "borroso"/fuera de foco
-   que pidió el usuario sin necesitar una imagen de verdad — se sacó la capa
-   de grano de la versión anterior porque el grano fotográfico pertenecía a
-   la estética "negra editorial" de antes, no a este fondo tipo backdrop de
-   estudio, más limpio. */
+/* Fondo claro y neutro (10-ago-2026, a pedido del usuario): primero pasó de
+   negro con textura a un degradé celeste armado en CSS — el usuario lo vio
+   aplicado y lo sintió muy "blanco", pidió algo más hueso, y mandó una foto
+   de textura (plaster/papel, tono hueso cálido) para usar tal cual en vez
+   de aproximarla con un degradé. Es foto real (img/fondo-hueso.jpg,
+   736x1472), a pantalla completa con cover — misma lógica que el ícono de
+   la app (10-ago-2026 también): cuando el usuario manda la imagen posta,
+   se usa la imagen posta en vez de recrearla a mano. */
 body {
   position: relative;
-  background-color: #dde7ec;
-  background-image: radial-gradient(ellipse 95% 70% at 50% 42%, #f2f7f9 0%, #dde7ec 55%, #c3d6e0 100%);
+  background-color: #e7e3da;
+  background-image: url("img/fondo-hueso.jpg");
   background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
 }
 
