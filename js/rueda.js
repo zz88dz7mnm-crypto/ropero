@@ -41,13 +41,14 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
     } else {
       dot.style.background = op.color || "#e11d2e";
     }
-    dot.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      if (wrap.dataset.arrastrando === "true") return;
-      elegir(i);
-    });
     arco.appendChild(dot);
   });
+  // La selección NO se maneja con "click" en cada punto: junto con
+  // setPointerCapture (necesario para que el arrastre no se corte si el
+  // mouse sale del wrap), el click nativo del navegador queda poco confiable
+  // en compu — `ev.target` del pointerup deja de reflejar el elemento real
+  // bajo el cursor una vez que hay captura activa. Por eso el pointerup de
+  // más abajo resuelve la selección a mano con elementFromPoint().
 
   function render(inicial = false) {
     arco.querySelectorAll(".rueda-opcion").forEach((dot) => {
@@ -79,8 +80,10 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
     if (navigator.vibrate) navigator.vibrate(8);
     const frente = arco.querySelector(`.rueda-opcion[data-index="${Math.round(estado.indiceActual)}"]`);
     if (!frente) return;
+    frente.classList.remove("rueda-tick");
+    void frente.offsetWidth; // fuerza reflow: si ya tenía la clase (ticks rápidos seguidos), reinicia la animación
     frente.classList.add("rueda-tick");
-    setTimeout(() => frente.classList.remove("rueda-tick"), 220);
+    setTimeout(() => frente.classList.remove("rueda-tick"), 240);
   }
 
   function marcarMoviendo(activo) {
@@ -110,22 +113,39 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
   });
 
   // Arrastre vertical = rotación (mismo patrón que habilitarGestos en app.js,
-  // eje Y en vez de X, ángulo en vez de traslación lineal).
+  // eje Y en vez de X, ángulo en vez de traslación lineal). Igual que un
+  // click normal no dispara "drag" hasta que el mouse se mueve unos pixeles
+  // de verdad, acá se espera un umbral (UMBRAL_DRAG_PX) antes de empezar a
+  // rotar — sin esto, hasta el temblor mínimo de la mano al clickear ya
+  // giraba la rueda un poquito, y se sentía tosco/impreciso.
+  const UMBRAL_DRAG_PX = 6;
+  let inicioX = 0;
   let inicioY = 0;
   let indiceBase = 0;
+  let moviendoseDeVerdad = false;
 
   wrap.addEventListener("pointerdown", (ev) => {
     if (!wrap.classList.contains("expandida")) return;
-    wrap.dataset.arrastrando = "true";
+    wrap.dataset.arrastrando = "pendiente"; // todavia no se sabe si es click o drag
+    inicioX = ev.clientX;
     inicioY = ev.clientY;
     indiceBase = estado.indiceActual;
+    moviendoseDeVerdad = false;
     wrap.setPointerCapture(ev.pointerId);
-    marcarMoviendo(true);
   });
 
   wrap.addEventListener("pointermove", (ev) => {
-    if (wrap.dataset.arrastrando !== "true") return;
+    if (wrap.dataset.arrastrando !== "pendiente" && wrap.dataset.arrastrando !== "true") return;
     const deltaY = ev.clientY - inicioY;
+    const deltaX = ev.clientX - inicioX;
+
+    if (!moviendoseDeVerdad) {
+      if (Math.hypot(deltaX, deltaY) < UMBRAL_DRAG_PX) return; // todavía podría ser un click
+      moviendoseDeVerdad = true;
+      wrap.dataset.arrastrando = "true";
+      marcarMoviendo(true);
+    }
+
     let nuevo = indiceBase + deltaY / RUEDA_ESPACIADO_PX;
     nuevo = Math.max(-0.6, Math.min(estado.total - 1 + 0.6, nuevo));
     const anterior = Math.round(estado.indiceActual);
@@ -134,14 +154,28 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
     if (Math.round(nuevo) !== anterior) tick();
   });
 
-  const soltar = () => {
-    if (wrap.dataset.arrastrando !== "true") return;
+  const soltar = (ev) => {
+    if (wrap.dataset.arrastrando !== "pendiente" && wrap.dataset.arrastrando !== "true") return;
+    const fueArrastre = moviendoseDeVerdad;
     wrap.dataset.arrastrando = "false";
     marcarMoviendo(false);
-    irA(Math.round(estado.indiceActual));
+
+    if (fueArrastre) {
+      irA(Math.round(estado.indiceActual));
+      return;
+    }
+    // No se movió lo suficiente como para contar como arrastre: es un
+    // click/tap. Con la captura de puntero activa, ev.target ya no sirve
+    // para saber qué hay bajo el cursor — se resuelve con un hit-test real.
+    const bajoElCursor = document.elementFromPoint(ev.clientX, ev.clientY);
+    const opcion = bajoElCursor && bajoElCursor.closest(".rueda-opcion");
+    if (opcion) elegir(Number(opcion.dataset.index));
   };
   wrap.addEventListener("pointerup", soltar);
-  wrap.addEventListener("pointercancel", soltar);
+  wrap.addEventListener("pointercancel", () => {
+    wrap.dataset.arrastrando = "false";
+    marcarMoviendo(false);
+  });
 
   function elegir(i) {
     irA(i);

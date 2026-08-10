@@ -668,8 +668,19 @@ body.favoritos-abierto .panel-favoritos {
   pointer-events: none;
 }
 
+/* "Tick" al pasar cada opción por el frente durante el arrastre — la idea es
+   que se sienta como el detent de una ruleta física de verdad. Usa
+   filter/box-shadow (no transform) para no pisar el transform que ya pone
+   render() en cada frame; así las dos animaciones conviven sin conflicto. */
+@keyframes rueda-tick-pop {
+  0% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  30% { filter: brightness(1.9); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.25); }
+  100% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
 .rueda-opcion.rueda-tick {
   border-color: #fff;
+  animation: rueda-tick-pop 0.24s ease-out;
 }
 
 /* Se puede interactuar con las opciones (click) apenas está expandida; el
