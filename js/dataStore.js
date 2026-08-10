@@ -30,6 +30,11 @@ async function crearRemera(remera) {
 async function listarPantalones() {
   const client = getSupabaseClient();
   if (!client) return [];
+  // creado_en de los 23 pantalones reales se ajustó a mano (10-ago-2026) para
+  // que el orden al deslizar sea el que pidió el usuario, por categoría:
+  // abrigado, jean normal, largos deportivos, shorts casuales, shorts
+  // normales, corto deportivo, malla, corderoy recto, formales — no refleja
+  // el momento real en que se cargó cada uno.
   const { data, error } = await client
     .from("pantalones")
     .select("*")
