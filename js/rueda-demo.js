@@ -32,11 +32,20 @@ const ALTURA_CAMPERAS_VH = {
   "img/camperas/puffer-negra-capucha.png": { desktop: 16.871, mobile: 20.079, dotPx: 60 },
 };
 
-// Radio más chico específicamente para camperas (el default de 150, en
-// RUEDA_RADIO de rueda.js, lo sigue usando accesorios sin cambios).
-const RADIO_CAMPERAS = 75;
+// Radio chico para las dos ruedas — a pedido del usuario (10-ago-2026): con
+// el radio default (150, RUEDA_RADIO en rueda.js) o incluso el reducido que
+// ya tenía camperas (75, ronda anterior) el arco se estiraba demasiado
+// hacia el centro de la pantalla y se perdía el efecto "círculo pegado al
+// borde" — la idea es que se lea como una rueda de verdad, pegada al borde
+// derecho, con las prendas entrando y saliendo de ese borde en vez de
+// flotar sueltas en medio de la pantalla. 45 para las dos (antes 75 en
+// camperas, 150 sin tocar en accesorios) achica bastante ese estirón sin
+// tocar el tamaño de cada foto (dotAlturaPx/alturaVh siguen igual — eso no
+// fue parte del pedido, solo cuánto se aleja el arco del borde).
+const RADIO_CAMPERAS = 45;
 const PASO_GRADOS_CAMPERAS = 32;
 
+const RADIO_ACCESORIOS = 45;
 // Con 7 accesorios (vs. hasta 4 camperas) el pasoGrados default (27°, ver
 // RUEDA_PASO_GRADOS en rueda.js) hace que del 5to accesorio en adelante
 // choquen todos contra el mismo tope de ±96° (0-indexado arrancando en la
@@ -138,6 +147,7 @@ document.addEventListener("ropero:listo", () => {
   crearRuedaSemicircular({
     id: "accesorios",
     top: "58vh",
+    radio: RADIO_ACCESORIOS,
     pasoGrados: PASO_GRADOS_ACCESORIOS,
     opciones: ACCESORIOS,
   });
