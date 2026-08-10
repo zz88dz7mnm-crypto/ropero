@@ -462,6 +462,44 @@ body.generar-abierto .panel-generar {
   color: #000;
 }
 
+/* Chips de color: el color posta como swatch, sin texto (a pedido del
+   usuario) — el borde blanco tenue es lo que hace que "negro" se distinga
+   del fondo del panel. Como el fondo del chip YA es el dato (el color),
+   "activo" no puede invertir a blanco como los chips de texto: se marca
+   con un aro blanco + un tilde en vez de invertir el color. */
+.pg-chips-color {
+  gap: 9px;
+}
+
+.pg-chip-color {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  position: relative;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pg-chip-color.activo {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+  transform: scale(1.08);
+}
+
+.pg-chip-color.activo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 8px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translateY(-1px) rotate(-45deg);
+  mix-blend-mode: difference; /* se ve tanto en swatches claros como oscuros */
+}
+
 .panel-generar-footer {
   flex: 0 0 auto;
   padding: 16px 18px 18px;
@@ -694,13 +732,15 @@ body.favoritos-abierto .panel-favoritos {
   position: fixed;
   width: 34px;
   height: 34px;
-  margin: -17px;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.6);
   padding: 0;
   overflow: hidden;
   opacity: 0;
-  transform: scale(0.5);
+  /* translate(-50%,-50%) centra la caja en el punto top/left sin importar
+     su tamaño (a diferencia de un margin fijo) — hace falta porque una
+     prenda real (campera) no mide 34x34 como el círculo de accesorio. */
+  transform: translate(-50%, -50%) scale(0.5);
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
   z-index: 110;
@@ -708,7 +748,7 @@ body.favoritos-abierto .panel-favoritos {
 
 .rueda-flotante.activo {
   opacity: 1;
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
 
@@ -719,12 +759,35 @@ body.favoritos-abierto .panel-favoritos {
   pointer-events: none;
 }
 
-#rueda-flotante-accesorios {
+/* Prenda real (ej. campera) posada sobre el outfit: nada de recorte
+   circular — se ve la prenda entera, tal cual la imagen, solo con el
+   tamaño controlado (mismo criterio de todo el proyecto: nunca recortar,
+   solo tamaño). Un drop-shadow chico ayuda a que se lea como algo
+   "posado arriba" del resto en vez de pegado al fondo. */
+.rueda-flotante.prenda-real {
+  width: auto;
+  border-radius: 8px;
+  border-color: transparent;
+  overflow: visible;
+  background: transparent !important;
+}
+
+.rueda-flotante.prenda-real img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+/* Posiciones swapeadas a pedido del usuario (9-ago-2026): la campera tiene
+   que posar sobre el hombro izquierdo (donde antes posaban los accesorios)
+   y los accesorios donde antes posaba la campera. */
+#rueda-flotante-camperas {
   top: 26vh;
   left: 58%;
 }
 
-#rueda-flotante-camperas {
+#rueda-flotante-accesorios {
   top: 40vh;
   left: 42%;
 }

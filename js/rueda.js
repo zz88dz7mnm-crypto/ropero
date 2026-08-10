@@ -177,6 +177,35 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
     marcarMoviendo(false);
   });
 
+  // Trackpad: gesto de dos dedos arriba/abajo (deltaY de "wheel") — mismo
+  // patrón que ya usan los coverflows principales en app.js, pero con
+  // deltaY derecho (acá la rotación ya es vertical) en vez de elegir el eje
+  // más grande. Se ignora si hay ctrlKey (eso es pinch-to-zoom).
+  let temporizadorRueda = null;
+  wrap.addEventListener(
+    "wheel",
+    (ev) => {
+      if (!wrap.classList.contains("expandida")) return;
+      if (ev.ctrlKey || !ev.deltaY) return;
+      ev.preventDefault();
+      marcarMoviendo(true);
+
+      let nuevo = estado.indiceActual + ev.deltaY / RUEDA_ESPACIADO_PX;
+      nuevo = Math.max(0, Math.min(estado.total - 1, nuevo));
+      const anterior = Math.round(estado.indiceActual);
+      estado.indiceActual = nuevo;
+      render();
+      if (Math.round(nuevo) !== anterior) tick();
+
+      clearTimeout(temporizadorRueda);
+      temporizadorRueda = setTimeout(() => {
+        marcarMoviendo(false);
+        irA(Math.round(estado.indiceActual));
+      }, 120);
+    },
+    { passive: false }
+  );
+
   function elegir(i) {
     irA(i);
     const opcion = opciones[i];
@@ -193,6 +222,20 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
       flotante.style.background = opcion.color || "#e11d2e";
       flotante.innerHTML = "";
     }
+
+    // Prenda real (ej. campera): altura propia por foto (mismo criterio de
+    // calibración de tamaño que gorras/zapatillas — canal alpha + ancho),
+    // sin el recorte circular de 34px que usan los accesorios chicos.
+    const esPrendaReal = !!(opcion.alturaDesktopVh || opcion.alturaMobileVh);
+    flotante.classList.toggle("prenda-real", esPrendaReal);
+    if (esPrendaReal) {
+      const esMobile = window.matchMedia("(max-width: 600px)").matches;
+      const altura = esMobile ? opcion.alturaMobileVh : opcion.alturaDesktopVh;
+      flotante.style.height = `${altura}vh`;
+    } else {
+      flotante.style.height = "";
+    }
+
     flotante.classList.add("activo");
     flotante.setAttribute("aria-hidden", "false");
   }

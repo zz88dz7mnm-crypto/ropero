@@ -86,7 +86,13 @@ async function init() {
   // (creado_en desc), porque filter() no reordena.
   const remeras = agruparPorTipo(remerasYBuzos, ["remera", "buzo"]);
 
-  window.Ropero.datos = { gorras: gorrasConVacio, remeras, pantalones, zapatillas };
+  // Camperas: viven en la misma tabla (tipo="campera") pero no entran al
+  // eje de tren superior — las consume js/rueda-demo.js para la rueda
+  // semicircular. Se mantiene el orden de creado_en (ajustado a mano para
+  // que salgan de la más usada a la menos usada, ver dataStore.js).
+  const camperas = remerasYBuzos.filter((r) => r.tipo === "campera");
+
+  window.Ropero.datos = { gorras: gorrasConVacio, remeras, pantalones, zapatillas, camperas };
 
   montarFila("gorras", "fila-gorras", "stage-gorras", "track-gorras", gorrasConVacio, "Todavía no hay gorras cargadas.");
   montarFila("remeras", "fila-remeras", "stage-remeras", "track-remeras", remeras, "Todavía no hay remeras cargadas.");

@@ -79,8 +79,36 @@ function valoresUnicos(datos, campo) {
   return [...set].sort();
 }
 
+// Hex de referencia para cada color de la paleta cerrada (ver
+// ropero-esquema-tags en memoria) — solo para pintar el swatch del chip,
+// no se guarda en ningún lado.
+const HEX_COLORES = {
+  negro: "#111111",
+  blanco: "#f2f2ef",
+  gris: "#8a8a8a",
+  beige: "#d9c7a3",
+  crudo: "#ede4d3",
+  marrón: "#6f4a2e",
+  dorado: "#c8a24d",
+  plateado: "#b9bcc2",
+  rojo: "#b83232",
+  naranja: "#d97a34",
+  amarillo: "#d9b93c",
+  verde: "#4a7a4a",
+  azul: "#33517d",
+  celeste: "#7fb3d5",
+  violeta: "#7c5a96",
+  rosa: "#d391a8",
+};
+
 function construirPanel(colores) {
   const chip = (valor, label, activo) => `<button class="pg-chip${activo ? " activo" : ""}" data-valor="${valor}">${label || valor}</button>`;
+
+  // Los chips de color no llevan texto — son el color posta para tocar,
+  // no la palabra. data-valor sigue siendo el nombre (lo que usa el
+  // scoring), title/aria-label lo dejan accesible igual.
+  const chipColor = (valor) =>
+    `<button class="pg-chip pg-chip-color" data-valor="${valor}" title="${valor}" aria-label="${valor}" style="background-color:${HEX_COLORES[valor] || "#555"}"></button>`;
 
   const html = `
     <div id="overlay-generar" class="overlay-generar"></div>
@@ -117,8 +145,8 @@ function construirPanel(colores) {
         </section>
         <section class="pg-seccion">
           <h4>Colores <span class="pg-hint">(hasta 3)</span></h4>
-          <div class="pg-chips" data-grupo="colores" data-multi="true" data-max="3">
-            ${colores.map((c) => chip(c)).join("")}
+          <div class="pg-chips pg-chips-color" data-grupo="colores" data-multi="true" data-max="3">
+            ${colores.map((c) => chipColor(c)).join("")}
           </div>
         </section>
       </div>

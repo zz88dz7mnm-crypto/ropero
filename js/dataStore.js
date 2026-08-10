@@ -3,6 +3,11 @@
 async function listarRemeras() {
   const client = getSupabaseClient();
   if (!client) return [];
+  // Trae remeras + buzos + camperas juntos (los distingue `tipo`); app.js
+  // los separa: remera/buzo van al eje de tren superior, campera va a la
+  // rueda semicircular (js/rueda-demo.js). El creado_en de las 4 camperas
+  // se ajustó a mano para que la rueda las muestre de la más usada a la
+  // menos usada, mismo truco que ya se usó con las zapatillas.
   const { data, error } = await client
     .from("remeras")
     .select("*")
