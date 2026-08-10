@@ -5,25 +5,28 @@
 
 // Altura calibrada por foto (canal alpha + ancho, mismo método que gorras y
 // zapatillas — ver [[ropero-criterios-diseno]] en memoria) para que las 4
-// camperas se vean del mismo porte real entre sí cuando posan sobre el
-// outfit. No hay "referencia vieja" para las camperas (son las primeras que
-// se cargan), así que el target de ancho se definió de cero mirando cómo
-// quedaba en pantalla.
+// camperas se vean del mismo porte real entre sí. Dos tamaños por foto:
+// - alturaDesktopVh/alturaMobileVh: el flotante "posado" sobre el outfit
+//   (+15% a pedido del usuario, 9-ago-2026, sobre el cálculo original).
+// - dotAlturaPx: la vista chica dentro de la rueda misma — también sin
+//   recorte circular (a pedido del usuario, "esa es la gracia"), pero más
+//   chica que el flotante porque conviven varias en el arco a la vez.
 const ALTURA_CAMPERAS_VH = {
-  "img/camperas/corderoy-redtap-marron.png": { desktop: 15.28, mobile: 18.18 },
-  "img/camperas/bomber-verde.png": { desktop: 15.11, mobile: 17.98 },
-  "img/camperas/puffer-negra.png": { desktop: 16.49, mobile: 19.62 },
-  "img/camperas/puffer-negra-capucha.png": { desktop: 14.67, mobile: 17.46 },
+  "img/camperas/corderoy-redtap-marron.png": { desktop: 17.572, mobile: 20.907, dotPx: 59 },
+  "img/camperas/bomber-verde.png": { desktop: 17.377, mobile: 20.677, dotPx: 59 },
+  "img/camperas/puffer-negra.png": { desktop: 18.964, mobile: 22.563, dotPx: 64 },
+  "img/camperas/puffer-negra-capucha.png": { desktop: 16.871, mobile: 20.079, dotPx: 57 },
 };
 
 document.addEventListener("ropero:listo", () => {
   const camperas = (window.Ropero.datos.camperas || []).map((c) => {
-    const altura = ALTURA_CAMPERAS_VH[c.imagen_url] || { desktop: 16, mobile: 19 };
+    const t = ALTURA_CAMPERAS_VH[c.imagen_url] || { desktop: 18, mobile: 21, dotPx: 60 };
     return {
       nombre: c.nombre,
       imagen_url: c.imagen_url,
-      alturaDesktopVh: altura.desktop,
-      alturaMobileVh: altura.mobile,
+      alturaDesktopVh: t.desktop,
+      alturaMobileVh: t.mobile,
+      dotAlturaPx: t.dotPx,
     };
   });
 

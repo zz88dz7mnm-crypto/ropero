@@ -686,7 +686,6 @@ body.favoritos-abierto .panel-favoritos {
   right: 0;
   width: 44px;
   height: 44px;
-  margin: -22px;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.55);
   opacity: 0;
@@ -704,6 +703,25 @@ body.favoritos-abierto .panel-favoritos {
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+}
+
+/* Prenda real dentro de la rueda (ej. campera): sin recorte circular acá
+   tampoco — "esa es la gracia", que floten las prendas de verdad en el
+   arco. Un poco más grandes que el círculo de accesorio, controlado por
+   dotAlturaPx (JS) en vez del width/height fijo de arriba. */
+.rueda-opcion.prenda-real {
+  width: auto;
+  border-radius: 6px;
+  border-color: transparent;
+  overflow: visible;
+  background: transparent !important;
+}
+
+.rueda-opcion.prenda-real img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
 }
 
 /* "Tick" al pasar cada opción por el frente durante el arrastre — la idea es

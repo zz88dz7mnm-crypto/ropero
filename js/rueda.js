@@ -11,8 +11,8 @@
 // reales de ninguna de las dos). El día que haya fotos reales, cada "opción"
 // simplemente lleva `imagen_url` en vez de `color` y se muestra igual.
 
-const RUEDA_RADIO = 128; // px, radio del círculo imaginario
-const RUEDA_PASO_GRADOS = 26; // separación angular entre opciones
+const RUEDA_RADIO = 150; // px, radio del círculo imaginario (subido de 128 para dar lugar a puntos más grandes sin que se pisen)
+const RUEDA_PASO_GRADOS = 27; // separación angular entre opciones
 const RUEDA_ESPACIADO_PX = 70; // px de arrastre vertical = "pasar una opción"
 
 function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
@@ -41,6 +41,14 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
     } else {
       dot.style.background = op.color || "#e11d2e";
     }
+    // Prenda real (ej. campera): nada de recorte circular acá tampoco — la
+    // gracia es ver la prenda flotando en el arco, no un círculo genérico.
+    // Un poco más grande que el círculo de accesorio (44px), pero más chica
+    // que el flotante "posado" (conviven varias a la vez en el arco).
+    if (op.dotAlturaPx) {
+      dot.classList.add("prenda-real");
+      dot.style.height = `${op.dotAlturaPx}px`;
+    }
     arco.appendChild(dot);
   });
   // La selección NO se maneja con "click" en cada punto: junto con
@@ -62,7 +70,11 @@ function crearRuedaSemicircular({ id, top, opciones, onElegir }) {
       const escala = Math.max(0.42, 1 - dist * 0.17);
       const opacidad = Math.max(0, 1 - dist * 0.32);
 
-      dot.style.transform = `translate(${tx}px, ${ty}px) scale(${escala})`;
+      // translate(-50%,-50%) primero: centra la caja en su propio punto de
+      // anclaje sin importar el tamaño (antes era un margin fijo de -22px,
+      // que solo daba bien para el círculo de 44px de accesorios — con los
+      // puntos de campera midiendo distinto cada uno, hacía falta esto).
+      dot.style.transform = `translate(-50%, -50%) translate(${tx}px, ${ty}px) scale(${escala})`;
       dot.style.opacity = opacidad;
       dot.style.zIndex = String(Math.round(100 - dist * 10));
       dot.style.pointerEvents = dist > 3.2 ? "none" : "auto";
