@@ -8,6 +8,11 @@ async function listarRemeras() {
   // rueda semicircular (js/rueda-demo.js). El creado_en de las 4 camperas
   // se ajustó a mano para que la rueda las muestre de la más usada a la
   // menos usada, mismo truco que ya se usó con las zapatillas.
+  // Las remeras (tipo="remera", 39 filas al 10-ago-2026) también tienen su
+  // creado_en ajustado a mano por bloques: normales primero, manga larga
+  // después, camisetas deportivas al final — y dentro de cada bloque, las
+  // que el usuario dijo que más usa van primero (pedido explícito, no es
+  // cronológico real).
   const { data, error } = await client
     .from("remeras")
     .select("*")

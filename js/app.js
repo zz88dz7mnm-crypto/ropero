@@ -95,6 +95,14 @@ const ALTURA_VH_DESKTOP = {
   "img/remeras/camiseta-argentina-celeste.png": 20.7340,
   "img/remeras/camiseta-universitario-roja-1.png": 20.4325,
   "img/remeras/camiseta-universitario-roja-2.png": 17.5050,
+  // ml-adidas-oasis-blanco-negro: la foto original no traía canal alpha
+  // (fondo blanco liso, no transparente). Se le generó transparencia real
+  // por flood-fill desde las 4 esquinas (tolerancia de color chica, para
+  // no comerse el cuerpo blanco de la remera — las mangas negras dan buen
+  // contraste con el fondo en casi todo el contorno) y recién ahí se
+  // calibró igual que el resto. No es un recorte manual de la prenda, solo
+  // se le agregó la transparencia que le faltaba al archivo original.
+  "img/remeras/ml-adidas-oasis-blanco-negro.png": 16.1196,
 };
 
 const ALTURA_VH_MOBILE = {
@@ -172,6 +180,7 @@ const ALTURA_VH_MOBILE = {
   "img/remeras/camiseta-argentina-celeste.png": 24.6652,
   "img/remeras/camiseta-universitario-roja-1.png": 24.3065,
   "img/remeras/camiseta-universitario-roja-2.png": 20.8240,
+  "img/remeras/ml-adidas-oasis-blanco-negro.png": 19.1759,
 };
 
 // Registro global chico: js/generar.js lo usa para leer las prendas
