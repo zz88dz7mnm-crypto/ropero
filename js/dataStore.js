@@ -69,6 +69,10 @@ async function crearGorra(gorra) {
 async function listarZapatillas() {
   const client = getSupabaseClient();
   if (!client) return [];
+  // creado_en de las 8 zapatillas reales se ajustó a mano (9-ago-2026) para
+  // que el orden al deslizar sea el que pidió el usuario (Gazelle,
+  // Birkenstock, Ultraboost, los 2 Vans, Timberland, las 2 Havaianas) — no
+  // refleja el momento real en que se cargó cada una.
   const { data, error } = await client
     .from("zapatillas")
     .select("*")

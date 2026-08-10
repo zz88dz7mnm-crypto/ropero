@@ -37,6 +37,11 @@ function generarOutfitRandom() {
   });
 }
 
+function unoAlAzar(arr) {
+  if (!arr || !arr.length) return null;
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 // Elige una prenda ancla al azar y arma el resto del outfit puntuando cada
 // candidato contra los tags de esa ancla (misma idea que Generar, pero el
 // "criterio" no lo elige el usuario a mano: sale de una prenda real).
@@ -45,10 +50,15 @@ function armarOutfitRandomUnaVez(datos) {
   const candidatosAncla = datos[categoriaAncla];
   const ancla = candidatosAncla[Math.floor(Math.random() * candidatosAncla.length)];
 
+  // v2: puntuarPrenda (generar.js) ahora espera clima/estilo/ocasion como un
+  // solo valor cada uno (el panel Generar pasó a ser de una sola opción por
+  // criterio) en vez de un Set/array. La prenda ancla puede tener varios
+  // valores en cada campo (ej. climas:["calor","templado"]) — se elige uno
+  // al azar de cada uno para armar el criterio "de una sola opción".
   const criteriosAncla = {
-    climaObjetivo: new Set(ancla.climas || []),
-    estilos: ancla.estilos || [],
-    ocasiones: ancla.ocasiones || [],
+    clima: unoAlAzar(ancla.climas),
+    estilo: unoAlAzar(ancla.estilos),
+    ocasion: unoAlAzar(ancla.ocasiones),
     colores: ancla.colores || [],
   };
 

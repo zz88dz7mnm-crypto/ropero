@@ -22,9 +22,14 @@ const ALTURA_VH_DESKTOP = {
   "img/gorras/yankees-roja-snapback.png": 7.8235,
   "img/gorras/padres-marron-fitted.png": 7.9188,
   "img/gorras/dodgers-negra.png": 7.9673,
-  "img/zapatillas/vans-skhi-negra.png": 12.1,
-  "img/zapatillas/timberland-miel.png": 10.02,
-  "img/zapatillas/vans-halfcab-negra.png": 19.5,
+  "img/zapatillas/vans-halfcab-negra.png": 8.8083,
+  "img/zapatillas/havaianas-terracota.png": 8.6311,
+  "img/zapatillas/vans-skhi-negra.png": 8.8203,
+  "img/zapatillas/havaianas-amarillas.png": 8.8203,
+  "img/zapatillas/timberland-miel.png": 8.7603,
+  "img/zapatillas/adidas-ultraboost-negra.png": 8.6023,
+  "img/zapatillas/birkenstock-boston-marron.png": 8.7782,
+  "img/zapatillas/adidas-gazelle-gris.png": 12.6973,
 };
 
 const ALTURA_VH_MOBILE = {
@@ -36,9 +41,14 @@ const ALTURA_VH_MOBILE = {
   "img/gorras/yankees-roja-snapback.png": 9.3068,
   "img/gorras/padres-marron-fitted.png": 9.4202,
   "img/gorras/dodgers-negra.png": 9.4779,
-  "img/zapatillas/vans-skhi-negra.png": 14.4,
-  "img/zapatillas/timberland-miel.png": 11.92,
-  "img/zapatillas/vans-halfcab-negra.png": 23.2,
+  "img/zapatillas/vans-halfcab-negra.png": 10.4802,
+  "img/zapatillas/havaianas-terracota.png": 10.2695,
+  "img/zapatillas/vans-skhi-negra.png": 10.4945,
+  "img/zapatillas/havaianas-amarillas.png": 10.4945,
+  "img/zapatillas/timberland-miel.png": 10.4232,
+  "img/zapatillas/adidas-ultraboost-negra.png": 10.2352,
+  "img/zapatillas/birkenstock-boston-marron.png": 10.4445,
+  "img/zapatillas/adidas-gazelle-gris.png": 15.1075,
 };
 
 // Registro global chico: js/generar.js lo usa para leer las prendas

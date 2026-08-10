@@ -4,22 +4,17 @@
 // vuelve a generar con los MISMOS criterios, no repite una prenda ya
 // mostrada hasta agotar las opciones de esa categoría.
 //
-// Nota: "Buzo" y "Campera" en Tren superior todavía no tienen prendas
-// cargadas (solo hay remeras) — al elegirlos no va a encontrar nada hasta
-// que sumemos esas prendas.
-
-const MAPA_CLIMA = {
-  frio: ["invierno", "invierno templado"],
-  templado: ["entretiempo", "invierno templado", "otonio", "primavera"],
-  calor: ["verano", "primavera"],
-};
-
-const MAPA_ESTACION = {
-  verano: ["verano"],
-  otonio: ["otonio"],
-  invierno: ["invierno", "invierno templado"],
-  primavera: ["primavera"],
-};
+// v2 (9-ago-2026, a pedido del usuario): criterios simplificados.
+// - "Estación" se elimina del panel — Clima (frío/templado/calor) matchea
+//   directo contra `climas` de cada prenda, sin mapa de traducción.
+// - "Tren superior" pasa a Remera / Buzo (Campera se mudó a su propio
+//   widget — la rueda semicircular, ver js/rueda.js — ya no es parte de
+//   esta fila ni de este criterio).
+// - "Ocasión" y "Estilo" pasan de listas abiertas multi-select a listas
+//   CERRADAS de una sola opción: Ocasión = casual/salida/estar en casa/
+//   deporte. Estilo = streetwear/alternativo/minimalista/relax (relax =
+//   vibra playera/surf).
+// - "Color" no cambió: sigue siendo dinámico según lo cargado, hasta 3.
 
 const vistosPorCategoria = { gorras: new Set(), remeras: new Set(), pantalones: new Set(), zapatillas: new Set() };
 let ultimoCriteriosHash = null;
@@ -29,10 +24,8 @@ document.addEventListener("ropero:listo", inicializarPanelGenerar);
 function inicializarPanelGenerar() {
   const datos = window.Ropero.datos;
   const coloresDisponibles = valoresUnicos(datos, "colores");
-  const estilosDisponibles = valoresUnicos(datos, "estilos");
-  const ocasionesDisponibles = valoresUnicos(datos, "ocasiones");
 
-  construirPanel(coloresDisponibles, estilosDisponibles, ocasionesDisponibles);
+  construirPanel(coloresDisponibles);
 
   const overlay = document.getElementById("overlay-generar");
   const panel = document.getElementById("panel-generar");
@@ -86,8 +79,8 @@ function valoresUnicos(datos, campo) {
   return [...set].sort();
 }
 
-function construirPanel(colores, estilos, ocasiones) {
-  const chip = (valor, label) => `<button class="pg-chip" data-valor="${valor}">${label || valor}</button>`;
+function construirPanel(colores) {
+  const chip = (valor, label, activo) => `<button class="pg-chip${activo ? " activo" : ""}" data-valor="${valor}">${label || valor}</button>`;
 
   const html = `
     <div id="overlay-generar" class="overlay-generar"></div>
@@ -100,9 +93,8 @@ function construirPanel(colores, estilos, ocasiones) {
         <section class="pg-seccion">
           <h4>Tren superior</h4>
           <div class="pg-chips" data-grupo="tipoSuperior">
-            <button class="pg-chip activo" data-valor="remera">Remera</button>
+            ${chip("remera", "Remera", true)}
             ${chip("buzo", "Buzo")}
-            ${chip("campera", "Campera")}
           </div>
         </section>
         <section class="pg-seccion">
@@ -112,21 +104,15 @@ function construirPanel(colores, estilos, ocasiones) {
           </div>
         </section>
         <section class="pg-seccion">
-          <h4>Estación</h4>
-          <div class="pg-chips" data-grupo="estacion">
-            ${chip("verano", "Verano")}${chip("otonio", "Otoño")}${chip("invierno", "Invierno")}${chip("primavera", "Primavera")}
-          </div>
-        </section>
-        <section class="pg-seccion">
           <h4>Ocasión</h4>
-          <div class="pg-chips" data-grupo="ocasiones" data-multi="true">
-            ${ocasiones.map((o) => chip(o)).join("")}
+          <div class="pg-chips" data-grupo="ocasion">
+            ${chip("casual", "Casual")}${chip("salida", "Salida")}${chip("estar en casa", "Estar en casa")}${chip("deporte", "Deporte")}
           </div>
         </section>
         <section class="pg-seccion">
           <h4>Estilo</h4>
-          <div class="pg-chips" data-grupo="estilos" data-multi="true">
-            ${estilos.map((e) => chip(e)).join("")}
+          <div class="pg-chips" data-grupo="estilo">
+            ${chip("streetwear", "Streetwear")}${chip("alternativo", "Alternativo")}${chip("minimalista", "Minimalista")}${chip("relax", "Relax")}
           </div>
         </section>
         <section class="pg-seccion">
@@ -153,29 +139,29 @@ function leerCriterios(panel) {
     return [...panel.querySelectorAll(`.pg-chips[data-grupo="${grupo}"] .pg-chip.activo`)].map((c) => c.dataset.valor);
   }
 
-  const clima = seleccionUnica("clima");
-  const estacion = seleccionUnica("estacion");
-  const climaObjetivo = new Set([...(MAPA_CLIMA[clima] || []), ...(MAPA_ESTACION[estacion] || [])]);
-
   return {
     tipoSuperior: seleccionUnica("tipoSuperior") || "remera",
-    climaObjetivo,
-    ocasiones: seleccionMultiple("ocasiones"),
-    estilos: seleccionMultiple("estilos"),
+    clima: seleccionUnica("clima"), // "frio" | "templado" | "calor" | null
+    ocasion: seleccionUnica("ocasion"), // string | null
+    estilo: seleccionUnica("estilo"), // string | null
     colores: seleccionMultiple("colores"),
   };
 }
 
+// Cada prenda puede tener MÁS de un valor en climas/estilos/ocasiones (ej.
+// una gorra que sirve para calor y templado) — el criterio elegido en el
+// panel es siempre uno solo, así que matchea si está incluido en la lista
+// de la prenda.
 function puntuarPrenda(prenda, criterios) {
   let score = 0;
-  if (criterios.climaObjetivo.size) {
-    score += (prenda.climas || []).filter((c) => criterios.climaObjetivo.has(c)).length;
+  if (criterios.clima) {
+    score += (prenda.climas || []).includes(criterios.clima) ? 1 : 0;
   }
-  if (criterios.estilos.length) {
-    score += (prenda.estilos || []).filter((e) => criterios.estilos.includes(e)).length;
+  if (criterios.estilo) {
+    score += (prenda.estilos || []).includes(criterios.estilo) ? 1 : 0;
   }
-  if (criterios.ocasiones.length) {
-    score += (prenda.ocasiones || []).filter((o) => criterios.ocasiones.includes(o)).length;
+  if (criterios.ocasion) {
+    score += (prenda.ocasiones || []).includes(criterios.ocasion) ? 1 : 0;
   }
   if (criterios.colores.length) {
     score += (prenda.colores || []).filter((c) => criterios.colores.includes(c)).length;
@@ -212,9 +198,9 @@ function elegirPrenda(categoria, candidatos, criterios) {
 function generarOutfit(criterios) {
   const hash = JSON.stringify({
     t: criterios.tipoSuperior,
-    c: [...criterios.climaObjetivo].sort(),
-    o: criterios.ocasiones.slice().sort(),
-    e: criterios.estilos.slice().sort(),
+    c: criterios.clima,
+    o: criterios.ocasion,
+    e: criterios.estilo,
     col: criterios.colores.slice().sort(),
   });
   if (hash !== ultimoCriteriosHash) {
@@ -223,8 +209,8 @@ function generarOutfit(criterios) {
   }
 
   const datos = window.Ropero.datos;
-  // "tipo" viene de la base (remera/buzo/campera); si alguna prenda vieja no
-  // lo tuviera todavía, la tratamos como remera por defecto.
+  // "tipo" viene de la base (remera/buzo); si alguna prenda vieja no lo
+  // tuviera todavía, la tratamos como remera por defecto.
   const candidatosRemera = datos.remeras.filter((r) => (r.tipo || "remera") === criterios.tipoSuperior);
 
   const elegidos = {
@@ -245,7 +231,7 @@ function generarOutfit(criterios) {
   });
 
   if (criterios.tipoSuperior !== "remera" && !elegidos.remeras) {
-    // Todavía no hay buzos/camperas cargados; no rompemos nada, solo avisamos.
+    // Todavía no hay buzos cargados; no rompemos nada, solo avisamos.
     console.warn(`Todavía no hay prendas de tipo "${criterios.tipoSuperior}" cargadas.`);
   }
 }
