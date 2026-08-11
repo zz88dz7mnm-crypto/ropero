@@ -15,6 +15,33 @@
 //   deporte. Estilo = streetwear/alternativo/minimalista/relax (relax =
 //   vibra playera/surf).
 // - "Color" no cambió: sigue siendo dinámico según lo cargado, hasta 3.
+//
+// v3 (10-ago-2026, a pedido del usuario): dos criterios nuevos + reglas
+// "duras" (no suman puntaje: directamente excluyen la prenda si no matchea).
+// - "Gorra" (Sí/No, default Sí): antes la gorra siempre se elegía por
+//   puntaje entre TODAS las opciones, incluido el slot "sin gorro" (podía
+//   colarse por azar/ciclo aunque no se hubiera pedido, ver app.js). Ahora
+//   es explícito: "Sí" elige solo entre gorras reales, "No" fuerza el slot
+//   "sin gorro".
+// - "Estación" vuelve al panel (verano/invierno/primavera/otoño), pero
+//   convive con Clima en vez de reemplazarlo — son dos preguntas distintas
+//   (qué se siente hoy vs. qué momento del año es). No hay tag `estaciones`
+//   en la base todavía, así que hoy Estación solo se usa para las dos reglas
+//   de abajo; el resto de las prendas no se puntúan distinto por Estación.
+// - Regla dura, mallas → Estación: las mallas (malla-billabong-*, tren
+//   inferior) quedan afuera del todo si se eligió una Estación puntual y no
+//   es verano. Sin Estación elegida, no se restringen.
+// - Regla dura, ojotas → Clima: mismo mecanismo, las ojotas Havaianas
+//   (havaianas-*) solo quedan si el Clima elegido es calor (o no se eligió
+//   ninguno).
+// - Empuje suave, manga larga: si Clima=frío Y Estación=invierno están
+//   elegidos los dos a la vez, las remeras manga larga (ml-*) suman puntaje
+//   extra — no es exclusión dura, solo más probabilidad de salir elegidas.
+// Los tres reconocimientos (malla/ojota/manga larga) son por nombre de
+// archivo porque no hay un tag dedicado en la base para "tipo de prenda"
+// en pantalones/zapatillas ni "largo de manga" en remeras — más frágil que
+// un tag (si se carga una prenda nueva del mismo tipo con otro nombre, no
+// la va a reconocer), pero funciona ya mismo sin tocar Supabase.
 
 const vistosPorCategoria = { gorras: new Set(), remeras: new Set(), pantalones: new Set(), zapatillas: new Set() };
 let ultimoCriteriosHash = null;
@@ -50,12 +77,18 @@ function inicializarPanelGenerar() {
   panel.querySelectorAll(".pg-chips").forEach((grupo) => {
     const multi = grupo.dataset.multi === "true";
     const max = Number(grupo.dataset.max) || Infinity;
+    // "tipoSuperior" y "gorra" son binarios obligatorios (siempre hay una
+    // remera/buzo puesta, siempre hay gorra sí/no) — a diferencia de
+    // clima/estación/ocasión/estilo (donde ningún chip activo = "sin
+    // preferencia" es un estado válido), estos dos nunca deben quedar sin
+    // ninguna opción resaltada, ni tocando de nuevo la que ya está activa.
+    const grupoSiempreActivo = grupo.dataset.grupo === "tipoSuperior" || grupo.dataset.grupo === "gorra";
     grupo.querySelectorAll(".pg-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
         if (!multi) {
           const yaActivo = chip.classList.contains("activo");
           grupo.querySelectorAll(".pg-chip").forEach((c) => c.classList.remove("activo"));
-          if (!yaActivo || grupo.dataset.grupo === "tipoSuperior") chip.classList.add("activo");
+          if (!yaActivo || grupoSiempreActivo) chip.classList.add("activo");
         } else {
           const activos = grupo.querySelectorAll(".pg-chip.activo").length;
           if (!chip.classList.contains("activo") && activos >= max) return;
@@ -126,9 +159,21 @@ function construirPanel(colores) {
           </div>
         </section>
         <section class="pg-seccion">
+          <h4>Gorra</h4>
+          <div class="pg-chips" data-grupo="gorra">
+            ${chip("si", "Sí", true)}${chip("no", "No")}
+          </div>
+        </section>
+        <section class="pg-seccion">
           <h4>Clima</h4>
           <div class="pg-chips" data-grupo="clima">
             ${chip("frio", "Frío")}${chip("templado", "Templado")}${chip("calor", "Calor")}
+          </div>
+        </section>
+        <section class="pg-seccion">
+          <h4>Estación</h4>
+          <div class="pg-chips" data-grupo="estacion">
+            ${chip("verano", "Verano")}${chip("invierno", "Invierno")}${chip("primavera", "Primavera")}${chip("otono", "Otoño")}
           </div>
         </section>
         <section class="pg-seccion">
@@ -169,11 +214,27 @@ function leerCriterios(panel) {
 
   return {
     tipoSuperior: seleccionUnica("tipoSuperior") || "remera",
+    gorra: seleccionUnica("gorra") || "si", // "si" | "no"
     clima: seleccionUnica("clima"), // "frio" | "templado" | "calor" | null
+    estacion: seleccionUnica("estacion"), // "verano" | "invierno" | "primavera" | "otono" | null
     ocasion: seleccionUnica("ocasion"), // string | null
     estilo: seleccionUnica("estilo"), // string | null
     colores: seleccionMultiple("colores"),
   };
+}
+
+// Reconocimiento por nombre de archivo (ver nota v3 arriba): sirve tanto
+// para las reglas duras de generarOutfit (candidatosPantalones/
+// candidatosZapatillas) como para el empuje suave de manga larga en
+// puntuarPrenda.
+function esMalla(pantalon) {
+  return /\/malla-/i.test((pantalon && pantalon.imagen_url) || "");
+}
+function esOjota(zapatilla) {
+  return /havaianas/i.test((zapatilla && zapatilla.imagen_url) || "");
+}
+function esMangaLarga(remera) {
+  return /\/ml-/i.test((remera && remera.imagen_url) || "");
 }
 
 // Cada prenda puede tener MÁS de un valor en climas/estilos/ocasiones (ej.
@@ -193,6 +254,13 @@ function puntuarPrenda(prenda, criterios) {
   }
   if (criterios.colores.length) {
     score += (prenda.colores || []).filter((c) => criterios.colores.includes(c)).length;
+  }
+  // Frío + invierno juntos: más tendencia a recomendar manga larga (pedido
+  // del usuario) — empuje, no exclusión: +2 alcanza para pasar adelante en
+  // la mayoría de los empates sin tapar del todo un match fuerte de
+  // estilo+ocasión+colores en una remera de manga corta.
+  if (criterios.clima === "frio" && criterios.estacion === "invierno" && esMangaLarga(prenda)) {
+    score += 2;
   }
   return score;
 }
@@ -226,7 +294,9 @@ function elegirPrenda(categoria, candidatos, criterios) {
 function generarOutfit(criterios) {
   const hash = JSON.stringify({
     t: criterios.tipoSuperior,
+    g: criterios.gorra,
     c: criterios.clima,
+    est: criterios.estacion,
     o: criterios.ocasion,
     e: criterios.estilo,
     col: criterios.colores.slice().sort(),
@@ -241,11 +311,27 @@ function generarOutfit(criterios) {
   // tuviera todavía, la tratamos como remera por defecto.
   const candidatosRemera = datos.remeras.filter((r) => (r.tipo || "remera") === criterios.tipoSuperior);
 
+  // Gorra "No": el único candidato válido es el slot "sin gorro" (ver
+  // app.js). Gorra "Sí" (default): se elige entre gorras reales únicamente.
+  const sinGorro = datos.gorras.find((g) => g.id === "sin-gorro");
+  const candidatosGorra = criterios.gorra === "no" ? [sinGorro].filter(Boolean) : datos.gorras.filter((g) => g.imagen_url);
+
+  // Mallas: regla dura atada a Estación (ver nota v3 arriba). Se mantienen
+  // si no es malla, o si es malla pero no se restringió (sin Estación
+  // elegida, o Estación=verano).
+  const candidatosPantalones = datos.pantalones.filter(
+    (p) => !esMalla(p) || !criterios.estacion || criterios.estacion === "verano"
+  );
+  // Ojotas Havaianas: misma regla, atada a Clima en vez de Estación.
+  const candidatosZapatillas = datos.zapatillas.filter(
+    (z) => !esOjota(z) || !criterios.clima || criterios.clima === "calor"
+  );
+
   const elegidos = {
-    gorras: elegirPrenda("gorras", datos.gorras, criterios),
+    gorras: elegirPrenda("gorras", candidatosGorra, criterios),
     remeras: elegirPrenda("remeras", candidatosRemera, criterios),
-    pantalones: elegirPrenda("pantalones", datos.pantalones, criterios),
-    zapatillas: elegirPrenda("zapatillas", datos.zapatillas, criterios),
+    pantalones: elegirPrenda("pantalones", candidatosPantalones, criterios),
+    zapatillas: elegirPrenda("zapatillas", candidatosZapatillas, criterios),
   };
 
   const orden = ["gorras", "remeras", "pantalones", "zapatillas"];

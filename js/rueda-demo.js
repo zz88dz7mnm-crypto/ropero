@@ -1,7 +1,5 @@
-// Instancia las dos ruedas semicirculares: camperas (arriba) con las 4 fotos
-// reales del usuario, accesorios (abajo) todavía con círculos rojos de
-// prueba — no hay fotos reales de accesorios todavía. Reemplazar `color`
-// por `imagen_url` (+ altura calibrada si aplica) ahí cuando lleguen.
+// Instancia las dos ruedas semicirculares: camperas (arriba) y accesorios
+// (abajo), ambas con fotos reales del usuario.
 
 // Altura calibrada por foto (canal alpha + ancho, mismo método que gorras y
 // zapatillas — ver [[ropero-criterios-diseno]] en memoria) para que las 4
@@ -34,10 +32,91 @@ const ALTURA_CAMPERAS_VH = {
   "img/camperas/puffer-negra-capucha.png": { desktop: 16.871, mobile: 20.079, dotPx: 60 },
 };
 
-// Radio más chico específicamente para camperas (el default de 150, en
-// RUEDA_RADIO de rueda.js, lo sigue usando accesorios sin cambios).
-const RADIO_CAMPERAS = 75;
+// Radio chico para las dos ruedas — a pedido del usuario (10-ago-2026): con
+// el radio default (150, RUEDA_RADIO en rueda.js) o incluso el reducido que
+// ya tenía camperas (75, ronda anterior) el arco se estiraba demasiado
+// hacia el centro de la pantalla y se perdía el efecto "círculo pegado al
+// borde" — la idea es que se lea como una rueda de verdad, pegada al borde
+// derecho, con las prendas entrando y saliendo de ese borde en vez de
+// flotar sueltas en medio de la pantalla. 45 para las dos (antes 75 en
+// camperas, 150 sin tocar en accesorios) achica bastante ese estirón sin
+// tocar el tamaño de cada foto (dotAlturaPx/alturaVh siguen igual — eso no
+// fue parte del pedido, solo cuánto se aleja el arco del borde).
+const RADIO_CAMPERAS = 45;
 const PASO_GRADOS_CAMPERAS = 32;
+
+const RADIO_ACCESORIOS = 45;
+// Con 7 accesorios (vs. hasta 4 camperas) el pasoGrados default (27°, ver
+// RUEDA_PASO_GRADOS en rueda.js) hace que del 5to accesorio en adelante
+// choquen todos contra el mismo tope de ±96° (0-indexado arrancando en la
+// 1ra opción: offset 4*27=108 ya se clampea a 96, igual que el 5to y 6to)
+// y queden apilados exactamente en el mismo lugar. 15° dejá los 7
+// (offsets 0 a 6) repartidos sin pisarse entre sí (6*15=90, adentro del
+// límite de 96).
+const PASO_GRADOS_ACCESORIOS = 15;
+
+// Accesorios reales (10-ago-2026): a diferencia de camperas/gorras/
+// zapatillas, no salen de Supabase (no hay tabla `accesorios` todavía) —
+// son fotos sueltas del usuario, así que van hardcodeadas acá mismo, cada
+// una con su nombre e imagen. Mismo método de calibración por altura (canal
+// alpha + ancho) que el resto del proyecto, pero sin el criterio de "mismo
+// porte real entre sí" que usan camperas (son 4 tipos de objeto bien
+// distintos — reloj, pulsera, collar, anillo — así que el tamaño de cada
+// uno sale de cuánto ocupa esa prenda puesta en la vida real, no de
+// igualar todas entre sí): relojes y collares (que la foto encuadra con
+// la correa/cordón estirado de punta a punta) quedan como las piezas más
+// grandes de la rueda; pulseras y anillo, más chicas.
+const ACCESORIOS = [
+  {
+    nombre: "Reloj Casio digital plateado",
+    imagen_url: "img/accesorios/casio-digital-plateado.png",
+    alturaDesktopVh: 19.5,
+    alturaMobileVh: 23.2,
+    dotAlturaPx: 62,
+  },
+  {
+    nombre: "Reloj Casio analógico plateado",
+    imagen_url: "img/accesorios/casio-analogico-plateado.png",
+    alturaDesktopVh: 19.5,
+    alturaMobileVh: 23.2,
+    dotAlturaPx: 62,
+  },
+  {
+    nombre: "Collar tabla de surf hueso con yin yang",
+    imagen_url: "img/accesorios/collar-tabla-surf-hueso-yinyang.png",
+    alturaDesktopVh: 21.5,
+    alturaMobileVh: 25.6,
+    dotAlturaPx: 64,
+  },
+  {
+    nombre: "Collar tabla de surf plata envejecida",
+    imagen_url: "img/accesorios/collar-tabla-surf-plata-vieja.png",
+    alturaDesktopVh: 21.5,
+    alturaMobileVh: 25.6,
+    dotAlturaPx: 64,
+  },
+  {
+    nombre: "Pulsera de cuero trenzada negra y marrón",
+    imagen_url: "img/accesorios/pulsera-cuero-trenzada-negro-marron.png",
+    alturaDesktopVh: 10.5,
+    alturaMobileVh: 12.5,
+    dotAlturaPx: 42,
+  },
+  {
+    nombre: "Pulsera metálica elastizada plateada",
+    imagen_url: "img/accesorios/pulsera-metalica-elastizada-plateada.png",
+    alturaDesktopVh: 9,
+    alturaMobileVh: 10.7,
+    dotAlturaPx: 40,
+  },
+  {
+    nombre: "Anillo plateado con picos negros",
+    imagen_url: "img/accesorios/anillo-plateado-picos-negros.png",
+    alturaDesktopVh: 7.5,
+    alturaMobileVh: 9,
+    dotAlturaPx: 34,
+  },
+];
 
 document.addEventListener("ropero:listo", () => {
   const camperas = (window.Ropero.datos.camperas || []).map((c) => {
@@ -68,12 +147,8 @@ document.addEventListener("ropero:listo", () => {
   crearRuedaSemicircular({
     id: "accesorios",
     top: "58vh",
-    opciones: [
-      { nombre: "Accesorio de prueba 1", color: "#e11d2e" },
-      { nombre: "Accesorio de prueba 2", color: "#e11d2e" },
-      { nombre: "Accesorio de prueba 3", color: "#e11d2e" },
-      { nombre: "Accesorio de prueba 4", color: "#e11d2e" },
-      { nombre: "Accesorio de prueba 5", color: "#e11d2e" },
-    ],
+    radio: RADIO_ACCESORIOS,
+    pasoGrados: PASO_GRADOS_ACCESORIOS,
+    opciones: ACCESORIOS,
   });
 });

@@ -1,5 +1,14 @@
 :root {
   --negro: #0a0a0a;
+  /* Tinta oscura (10-ago-2026): todo lo que flota DIRECTO sobre el fondo de
+     body (botón menú, botón favorito, bumps de las ruedas) — no lo que vive
+     adentro de una tarjeta oscura (menú lateral, panel Generar/Favoritos),
+     eso sigue blanco sobre su propia tarjeta #0a0a0a sin cambios. Mismo
+     truco que ya usaba el proyecto (rgba con alpha variable), solo que
+     ahora la base es esta tinta en vez de blanco puro, porque el fondo de
+     body pasó de negro a claro (ver --fondo-* más abajo) y blanco-sobre-
+     claro no se vería. */
+  --tinta: 27, 40, 46;
 }
 
 * { box-sizing: border-box; }
@@ -7,34 +16,26 @@
 html, body {
   margin: 0;
   height: 100%;
-  background: var(--negro);
+  background: #e7e3da;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Fondo con textura: antes era negro plano (#000) sin ningún relieve. Ahora
-   es un negro profundo apenas más levantado (#0a0a0a, se sigue leyendo como
-   "negro" y no altera el color percibido de las prendas) + dos capas sutiles
-   que le dan presencia sin competir nunca con las fotos de ropa:
-   1) un resplandor radial muy tenue centrado verticalmente entre la remera
-      y el pantalón (el "centro" del outfit armado), como si hubiera una luz
-      suave detrás del conjunto.
-   2) grano fotográfico (ruido SVG, tonos grises comprimidos a ~44-56% y
-      mezclados con "overlay") para romper la planitud digital — el mismo
-      recurso que usan sitios de moda/editorial para que el negro se sienta
-      con textura en vez de vacío.
-   Todo vía background-image en body, sin agregar elementos al DOM: así no
-   hay riesgo de que tape clicks/drag ni de pisar el z-index del menú o los
-   paneles (el fondo de body siempre queda detrás de sus hijos). */
+/* Fondo claro y neutro (10-ago-2026, a pedido del usuario): primero pasó de
+   negro con textura a un degradé celeste armado en CSS — el usuario lo vio
+   aplicado y lo sintió muy "blanco", pidió algo más hueso, y mandó una foto
+   de textura (plaster/papel, tono hueso cálido) para usar tal cual en vez
+   de aproximarla con un degradé. Es foto real (img/fondo-hueso.jpg,
+   736x1472), a pantalla completa con cover — misma lógica que el ícono de
+   la app (10-ago-2026 también): cuando el usuario manda la imagen posta,
+   se usa la imagen posta en vez de recrearla a mano. */
 body {
   position: relative;
-  background-color: var(--negro);
-  background-image:
-    radial-gradient(ellipse 85% 55% at 50% 46%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 68%),
-    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMjAiIGhlaWdodD0iMjIwIj4KICA8ZmlsdGVyIGlkPSJuIj4KICAgIDxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjg1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIiByZXN1bHQ9Im5vaXNlIi8+CiAgICA8ZmVDb2xvck1hdHJpeCBpbj0ibm9pc2UiIHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAiLz4KICAgIDxmZUNvbXBvbmVudFRyYW5zZmVyPgogICAgICA8ZmVGdW5jUiB0eXBlPSJsaW5lYXIiIHNsb3BlPSIwLjEyIiBpbnRlcmNlcHQ9IjAuNDQiLz4KICAgICAgPGZlRnVuY0cgdHlwZT0ibGluZWFyIiBzbG9wZT0iMC4xMiIgaW50ZXJjZXB0PSIwLjQ0Ii8+CiAgICAgIDxmZUZ1bmNCIHR5cGU9ImxpbmVhciIgc2xvcGU9IjAuMTIiIGludGVyY2VwdD0iMC40NCIvPgogICAgPC9mZUNvbXBvbmVudFRyYW5zZmVyPgogIDwvZmlsdGVyPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNuKSIvPgo8L3N2Zz4=");
-  background-repeat: no-repeat, repeat;
-  background-size: cover, 220px 220px;
-  background-blend-mode: normal, overlay;
+  background-color: #e7e3da;
+  background-image: url("img/fondo-hueso.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 /* Cuatro filas (gorra / remera / pantalón / zapatilla). Las posiciones de
@@ -197,7 +198,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--tinta), 0.55);
   font-size: 0.85rem;
   text-align: center;
   padding: 2rem;
@@ -226,7 +227,7 @@ body {
   display: block;
   width: 22px;
   height: 1.5px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(var(--tinta), 0.85);
   transition: transform 0.25s ease, opacity 0.25s ease, width 0.25s ease;
 }
 
@@ -254,7 +255,7 @@ body.menu-abierto .btn-menu span:nth-child(3) {
   width: 32px;
   height: 32px;
   background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border: 1.5px solid rgba(var(--tinta), 0.4);
   border-radius: 7px;
   display: flex;
   align-items: center;
@@ -658,8 +659,8 @@ body.favoritos-abierto .panel-favoritos {
   display: block;
   width: 20px;
   height: 68px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: rgba(var(--tinta), 0.07);
+  border: 1.5px solid rgba(var(--tinta), 0.35);
   border-right: none;
   border-radius: 34px 0 0 34px;
   padding: 0;
@@ -667,8 +668,8 @@ body.favoritos-abierto .panel-favoritos {
 }
 
 .rueda-wrap.expandida .rueda-bump {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(var(--tinta), 0.18);
+  border-color: rgba(var(--tinta), 0.55);
 }
 
 .rueda-arco {
@@ -687,7 +688,7 @@ body.favoritos-abierto .panel-favoritos {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(var(--tinta), 0.5);
   opacity: 0;
   pointer-events: none;
   overflow: hidden;
@@ -729,13 +730,13 @@ body.favoritos-abierto .panel-favoritos {
    filter/box-shadow (no transform) para no pisar el transform que ya pone
    render() en cada frame; así las dos animaciones conviven sin conflicto. */
 @keyframes rueda-tick-pop {
-  0% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-  30% { filter: brightness(1.9); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.25); }
-  100% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  0% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(var(--tinta), 0); }
+  30% { filter: brightness(1.9); box-shadow: 0 0 0 6px rgba(var(--tinta), 0.22); }
+  100% { filter: brightness(1); box-shadow: 0 0 0 0 rgba(var(--tinta), 0); }
 }
 
 .rueda-opcion.rueda-tick {
-  border-color: #fff;
+  border-color: rgb(var(--tinta));
   animation: rueda-tick-pop 0.24s ease-out;
 }
 
@@ -751,7 +752,7 @@ body.favoritos-abierto .panel-favoritos {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border: 1.5px solid rgba(var(--tinta), 0.55);
   padding: 0;
   overflow: hidden;
   opacity: 0;
